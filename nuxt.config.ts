@@ -13,6 +13,10 @@ export default defineNuxtConfig({
 
   ssr: true,
 
+  nitro: {
+    preset: 'cloudflare-pages'
+  },
+
   ui: {
     icons: ['heroicons', 'simple-icons'],
     safelistColors: ['primary', 'red', 'orange', 'green']
