@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
   ],
 
-  ssr: false,
+  ssr: true,
 
   ui: {
     icons: ['heroicons', 'simple-icons'],
@@ -65,5 +65,5 @@ export default defineNuxtConfig({
     baseURL: 'http://localhost:8080'
   },
 
-  compatibilityDate: '2024-09-19'
+  compatibilityDate: '2024-09-19',
 })
