@@ -66,7 +66,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    baseURL: 'http://localhost:8080'
+    baseURL: 'https://extended-tallulah-gmky-2cca56a1.koyeb.app'
   },
 
   compatibilityDate: '2024-09-19',
