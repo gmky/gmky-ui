@@ -34,6 +34,7 @@ const fields = [{
 }]
 
 const runtimeConfig = useRuntimeConfig()
+console.log('Runtime config ', runtimeConfig.baseURL)
 
 const validate = (state: any) => {
     const errors: FormError[] = []
