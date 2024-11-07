@@ -1,6 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   extends: [process.env.NUXT_UI_PRO_PATH || '@gmky/ui-pro'],
+
   modules: [
     '@pinia/nuxt',
     '@nuxt/eslint',
@@ -9,17 +10,22 @@ export default defineNuxtConfig({
     '@vueuse/nuxt',
     '@sidebase/nuxt-auth',
   ],
+
   ssr: false,
+
   ui: {
     icons: ['heroicons', 'simple-icons'],
     safelistColors: ['primary', 'red', 'orange', 'green']
   },
+
   devtools: {
     enabled: true
   },
+
   typescript: {
     strict: false
   },
+
   eslint: {
     config: {
       stylistic: {
@@ -28,6 +34,7 @@ export default defineNuxtConfig({
       }
     }
   },
+
   auth: {
     isEnabled: true,
     baseURL: 'http://localhost:3000/api',
@@ -53,7 +60,10 @@ export default defineNuxtConfig({
       isEnabled: true
     }
   },
+
   runtimeConfig: {
     baseURL: 'http://localhost:8080'
-  }
+  },
+
+  compatibilityDate: '2024-09-19'
 })
