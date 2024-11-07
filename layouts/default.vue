@@ -1,84 +1,90 @@
 <script setup lang="ts">
+import { useAuthStore } from '~/stores/auth';
+
 const route = useRoute()
 const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
-const links = [{
-  id: 'home',
-  label: 'Home',
-  icon: 'i-heroicons-home',
-  to: '/admin',
-  tooltip: {
-    text: 'Home',
-    shortcuts: ['G', 'H']
-  }
-}, {
-  id: 'inbox',
-  label: 'Inbox',
-  icon: 'i-heroicons-inbox',
-  to: '/admin/inbox',
-  badge: '4',
-  tooltip: {
-    text: 'Inbox',
-    shortcuts: ['G', 'I']
-  }
-}, {
-  id: 'users',
-  label: 'Users',
-  icon: 'i-heroicons-users',
-  to: '/admin/users',
-  tooltip: {
-    text: 'Users',
-    shortcuts: ['G', 'U']
-  }
-}, {
-  id: 'roles',
-  label: 'Roles',
-  icon: 'i-heroicons-user-group',
-  to: '/admin/roles',
-  tooltip: {
-    text: 'Roles',
-    shortcuts: ['R']
-  }
-}, {
-  id: 'permissionset',
-  label: 'Permission Set',
-  icon: 'i-heroicons-adjustments-horizontal',
-  to: '/admin/permission-set',
-  tooltip: {
-    text: 'Permission Set',
-    shortcuts: ['PS']
-  }
-},{
-  id: 'permissions',
-  label: 'Permissions',
-  icon: 'i-heroicons-key',
-  to: '/admin/permissions',
-  tooltip: {
-    text: 'Permissions',
-    shortcuts: ['P']
-  }
-}, {
-  id: 'settings',
-  label: 'Settings',
-  to: '/admin/settings',
-  icon: 'i-heroicons-cog-8-tooth',
-  children: [{
-    label: 'General',
-    to: '/admin/settings',
-    exact: true
-  }, {
-    label: 'Members',
-    to: '/admin/settings/members'
-  }, {
-    label: 'Notifications',
-    to: '/admin/settings/notifications'
-  }],
-  tooltip: {
-    text: 'Settings',
-    shortcuts: ['G', 'S']
-  }
-}]
+// const links = [{
+//   id: 'home',
+//   label: 'Home',
+//   icon: 'i-heroicons-home',
+//   to: '/admin',
+//   tooltip: {
+//     text: 'Home',
+//     shortcuts: ['G', 'H']
+//   }
+// }, {
+//   id: 'inbox',
+//   label: 'Inbox',
+//   icon: 'i-heroicons-inbox',
+//   to: '/admin/inbox',
+//   badge: '4',
+//   tooltip: {
+//     text: 'Inbox',
+//     shortcuts: ['G', 'I']
+//   }
+// }, {
+//   id: 'users',
+//   label: 'Users',
+//   icon: 'i-heroicons-users',
+//   to: '/admin/users',
+//   tooltip: {
+//     text: 'Users',
+//     shortcuts: ['G', 'U']
+//   }
+// }, {
+//   id: 'roles',
+//   label: 'Roles',
+//   icon: 'i-heroicons-user-group',
+//   to: '/admin/roles',
+//   tooltip: {
+//     text: 'Roles',
+//     shortcuts: ['R']
+//   }
+// }, {
+//   id: 'permissionset',
+//   label: 'Permission Set',
+//   icon: 'i-heroicons-adjustments-horizontal',
+//   to: '/admin/permission-set',
+//   tooltip: {
+//     text: 'Permission Set',
+//     shortcuts: ['PS']
+//   }
+// },{
+//   id: 'permissions',
+//   label: 'Permissions',
+//   icon: 'i-heroicons-key',
+//   to: '/admin/permissions',
+//   tooltip: {
+//     text: 'Permissions',
+//     shortcuts: ['P']
+//   }
+// }, {
+//   id: 'settings',
+//   label: 'Settings',
+//   to: '/admin/settings',
+//   icon: 'i-heroicons-cog-8-tooth',
+//   children: [{
+//     label: 'General',
+//     to: '/admin/settings',
+//     exact: true
+//   }, {
+//     label: 'Members',
+//     to: '/admin/settings/members'
+//   }, {
+//     label: 'Notifications',
+//     to: '/admin/settings/notifications'
+//   }],
+//   tooltip: {
+//     text: 'Settings',
+//     shortcuts: ['G', 'S']
+//   }
+// }]
+
+const authStore = useAuthStore()
+
+const links = computed(() => authStore.getLinks)
 
 const footerLinks = [{
   label: 'Invite people',
@@ -93,7 +99,7 @@ const footerLinks = [{
 const groups = [{
   key: 'links',
   label: 'Go to',
-  commands: links.map(link => ({ ...link, shortcuts: link.tooltip?.shortcuts }))
+  commands: links.value.map(link => ({ ...link, shortcuts: link.tooltip?.shortcuts }))
 }, {
   key: 'code',
   label: 'Code',

@@ -75,9 +75,6 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
                             <UKbd value="/" />
                         </template>
                     </UInput>
-
-                    <UButton label="New permission" trailing-icon="i-heroicons-plus" color="gray"
-                        @click="isNewPermissionModalOpen = true" />
                 </template>
             </UDashboardNavbar>
             <UDashboardToolbar>

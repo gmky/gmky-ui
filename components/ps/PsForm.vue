@@ -2,6 +2,7 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 import permissionService from '~/services/permission.service';
 import psService from '~/services/ps.service';
+import type { Permission } from '~/types';
 
 const emit = defineEmits(['close'])
 
@@ -20,7 +21,6 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log('pl')
   state.permissionIds = selected.value.map(item => item.id)
   const { error } = await psService.createPermissionSet(state);
   addToast(error.value, 'Create new permission set successfully', 'Failed to create new permission set')
@@ -28,7 +28,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 }
 
 const permissionLoading = ref(false)
-const selected = ref([])
+const selected = ref([] as Permission[])
 async function searchPermission(q: string) {
   permissionLoading.value = true
 
@@ -75,6 +75,9 @@ async function searchPermission(q: string) {
       label="Permission"
       name="permission"
     >
+      <template #description>
+        <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.resourceCode }} - {{ item.permissionCode }}</UBadge>
+      </template>
       <USelectMenu
         v-model="selected"
         :loading="permissionLoading"
@@ -83,6 +86,7 @@ async function searchPermission(q: string) {
         class="space-y-2 space-x-4"
         multiple
         trailing
+        by="id"
       >
         <template #option="{ option: permission }">
           <span class="truncate">{{ permission.resourceCode }} - {{ permission.permissionCode }}</span>

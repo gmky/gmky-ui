@@ -1,15 +1,25 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
+import roleService from '~/services/role.service';
+import userService from '~/services/user.service';
+import type { Role } from '~/types';
 
 const emit = defineEmits(['close'])
 
 const state = reactive({
-  name: undefined,
+  firstName: undefined,
+  lastName: undefined,
   email: undefined,
   username: undefined,
   password: undefined,
-  passwordConfirmation: undefined
+  passwordConfirmation: undefined,
+  isTemporaryPassword: false,
+  emailVerified: true,
+  status: 'PENDING',
+  roles: []
 })
+
+const statusOpts = ref(['PENDING', 'ACTIVE', 'LOCKED'])
 
 // https://ui.nuxt.com/components/form
 const validate = (state: any): FormError[] => {
@@ -17,16 +27,30 @@ const validate = (state: any): FormError[] => {
   if (!state.username) errors.push({ path: 'username', message: 'Please enter your username.' })
   if (!state.password) errors.push({ path: 'password', message: 'Please enter your password.' })
   if (!state.passwordConfirmation) errors.push({ path: 'password-confirmation', message: 'Please re-enter your password.' })
-  if (!state.name) errors.push({ path: 'name', message: 'Please enter a name.' })
+  if (!state.firstName) errors.push({ path: 'fist-name', message: 'Please enter first name.' })
+  if (!state.lastName) errors.push({ path: 'last-name', message: 'Please enter last name.' })
   if (!state.email) errors.push({ path: 'email', message: 'Please enter an email.' })
   if (state.password && state.passwordConfirmation && state.password != state.passwordConfirmation) errors.push({ path: 'password-confirmation', message: 'Passwords do not match.' })
   return errors
 }
 
-async function onSubmit(event: FormSubmitEvent<any>) {
-  // Do something with data
-  console.log(event.data)
+const selected = ref([] as Role[])
+const roleLoading = ref(false)
+async function searchRole(q: string) {
+  roleLoading.value = true
 
+  const query = { type: ['TEMPLATE', 'CUSTOM'], name: q, size: 50 }
+  const { data: response } = await roleService.filterRole(query)
+
+  roleLoading.value = false
+
+  return response.value.data
+}
+
+async function onSubmit(event: FormSubmitEvent<any>) {
+  state.roles = selected.value.map(item => item.id);
+  const { error } = await userService.createUser(state);
+  addToast(error.value, 'Create new user successfully', 'Failed to create new user')
   emit('close')
 }
 </script>
@@ -73,12 +97,23 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <UFormGroup
-      label="Name"
-      name="name"
+      label="First Name"
+      name="first-name"
     >
       <UInput
-        v-model="state.name"
-        placeholder="John Doe"
+        v-model="state.firstName"
+        placeholder="John"
+        autofocus
+      />
+    </UFormGroup>
+
+    <UFormGroup
+      label="Last Name"
+      name="last-name"
+    >
+      <UInput
+        v-model="state.lastName"
+        placeholder="Doe"
         autofocus
       />
     </UFormGroup>
@@ -92,6 +127,34 @@ async function onSubmit(event: FormSubmitEvent<any>) {
         type="email"
         placeholder="john.doe@example.com"
       />
+    </UFormGroup>
+
+    <UFormGroup
+      label="Status"
+      name="status"
+    >
+      <USelect v-model="state.status" :options="statusOpts" />
+    </UFormGroup>
+
+    <UFormGroup
+      label="Role"
+      name="role"
+    >
+      <template #description>
+        <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
+      </template>
+      <USelectMenu
+        v-model="selected"
+        :loading="roleLoading"
+        :searchable="searchRole"
+        placeholder="Search for a roles..."
+        class="space-y-2 space-x-4"
+        option-attribute="name"
+        multiple
+        trailing
+        by="id"
+      >
+      </USelectMenu>
     </UFormGroup>
 
     <div class="flex justify-end gap-3">

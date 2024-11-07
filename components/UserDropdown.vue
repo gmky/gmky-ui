@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { SessionData } from '#auth';
 import { useAuthStore } from '~/stores/auth';
 
 
@@ -8,7 +9,7 @@ const { metaSymbol } = useShortcuts()
 
 const auth = useAuth()
 
-const session = await auth.getSession();
+const session = (await auth.getSession()) as SessionData;
 
 const items = computed(() => [
   [{
@@ -18,7 +19,7 @@ const items = computed(() => [
   }], [{
     label: 'Settings',
     icon: 'i-heroicons-cog-8-tooth',
-    to: '/settings'
+    to: '/admin/settings'
   }, {
     label: 'Command menu',
     icon: 'i-heroicons-command-line',

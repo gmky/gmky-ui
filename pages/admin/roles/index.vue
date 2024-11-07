@@ -50,7 +50,7 @@ const defaultColumns = [{
 
 const actions = (row) => [
   [{
-    label: 'Edit',
+    label: 'Update permission set',
     icon: 'i-heroicons-pencil-square-20-solid',
     click: () => console.log('Edit', row.id)
   }, {
@@ -78,7 +78,7 @@ const totalItems = computed(() => response.value.meta.total || 0)
 
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
-const canCreateRole = computed(async () => await useAuthorize('role:create'))
+const canCreateRole = await useAuthorize('role:create')
 
 </script>
 
@@ -99,7 +99,7 @@ const canCreateRole = computed(async () => await useAuthorize('role:create'))
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardModal v-model="isNewRoleModalOpen" title="New user" description="Add a new user to your database"
+            <UDashboardModal v-model="isNewRoleModalOpen" title="New user" description="Add a new user to your database" v-if="canCreateRole"
                 :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <RoleForm @close="isNewRoleModalOpen = false" />

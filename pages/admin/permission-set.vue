@@ -64,6 +64,8 @@ const totalItems = computed(() => response.value.meta.total || 0)
 
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
+const canCreatePS = await useAuthorize('permissionset:create')
+
 </script>
 <template>
     <UDashboardPage>
@@ -77,12 +79,12 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
                         </template>
                     </UInput>
 
-                    <UButton label="New permission set" trailing-icon="i-heroicons-plus" color="gray"
+                    <UButton label="New permission set" trailing-icon="i-heroicons-plus" color="gray" v-if="canCreatePS"
                         @click="isNewPSModalOpen = true" />
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardModal v-model="isNewPSModalOpen" title="New user" description="Add a new user to your database"
+            <UDashboardModal v-model="isNewPSModalOpen" title="New user" description="Add a new user to your database" v-if="canCreatePS"
                 :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <PsForm @close="isNewPSModalOpen = false" />

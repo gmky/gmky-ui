@@ -2,6 +2,7 @@
 import type { FormError, FormSubmitEvent } from '#ui/types'
 import psService from '~/services/ps.service';
 import roleService from '~/services/role.service';
+import type { PermissionSet } from '~/types';
 
 const emit = defineEmits(['close'])
 
@@ -52,7 +53,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 }
 
 const psLoading = ref(false)
-const selected = ref([])
+const selected = ref([] as PermissionSet[])
 async function searchPermissionSet(q: string) {
   psLoading.value = true
   const query = { type: ['TEMPLATE', 'CUSTOM'], name: q}
@@ -113,6 +114,9 @@ async function searchPermissionSet(q: string) {
       label="Permission Set"
       name="permission-set"
     >
+      <template #description>
+        <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
+      </template>
       <USelectMenu
         v-model="selected"
         :loading="psLoading"
@@ -123,6 +127,7 @@ async function searchPermissionSet(q: string) {
         option-attribute="name"
         multiple
         trailing
+        by="id"
       />
     </UFormGroup>
 
