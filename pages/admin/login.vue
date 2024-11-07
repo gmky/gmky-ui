@@ -33,6 +33,8 @@ const fields = [{
     type: 'checkbox'
 }]
 
+const runtimeConfig = useRuntimeConfig()
+
 const validate = (state: any) => {
     const errors: FormError[] = []
     if (!state.username) errors.push({ path: 'username', message: 'Username is required' })
@@ -63,7 +65,7 @@ async function onSubmit(data: any) {
                     icon="i-heroicons-lock-closed" :ui="{ base: 'text-center', footer: 'text-center' }"
                     @submit="onSubmit">
                     <template #description>
-                        Login with your username and password
+                        Login with your username and password {{ runtimeConfig.baseURL }}
                     </template>
 
                     <template #password-hint>
