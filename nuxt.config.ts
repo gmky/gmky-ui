@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     '@sidebase/nuxt-auth',
   ],
 
-  ssr: true,
+  ssr: false,
 
   nitro: {
     preset: 'cloudflare-pages'
