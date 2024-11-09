@@ -5,10 +5,10 @@ const _useUIState = () => {
 
   const isHeaderDialogOpen = ref(false)
   const isContentSearchModalOpen = ref(false)
-  const isDashboardSidebarSlidoverOpen = ref(false)
+  const isDashboardSidebarSlideoverOpen = ref(false)
   const isDashboardSearchModalOpen = ref(false)
 
-  function toggleContentSearch () {
+  function toggleContentSearch() {
     if (isHeaderDialogOpen.value) {
       isHeaderDialogOpen.value = false
 
@@ -22,9 +22,9 @@ const _useUIState = () => {
     isContentSearchModalOpen.value = !isContentSearchModalOpen.value
   }
 
-  function toggleDashboardSearch () {
-    if (isDashboardSidebarSlidoverOpen.value) {
-      isDashboardSidebarSlidoverOpen.value = false
+  function toggleDashboardSearch() {
+    if (isDashboardSidebarSlideoverOpen.value) {
+      isDashboardSidebarSlideoverOpen.value = false
 
       setTimeout(() => {
         isDashboardSearchModalOpen.value = !isDashboardSearchModalOpen.value
@@ -37,13 +37,17 @@ const _useUIState = () => {
   }
 
   watch(() => route.path, () => {
-    isDashboardSidebarSlidoverOpen.value = false
+    isDashboardSidebarSlideoverOpen.value = false
   })
 
   return {
     isHeaderDialogOpen,
     isContentSearchModalOpen,
-    isDashboardSidebarSlidoverOpen,
+    /**
+     * @deprecated Use the new {@link isDashboardSidebarSlideoverOpen} ref instead.
+     */
+    isDashboardSidebarSlidoverOpen: isDashboardSidebarSlideoverOpen,
+    isDashboardSidebarSlideoverOpen,
     isDashboardSearchModalOpen,
     toggleContentSearch,
     toggleDashboardSearch

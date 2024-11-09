@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import type { DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'min-h-[calc(100vh-var(--header-height))]'
@@ -21,7 +22,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

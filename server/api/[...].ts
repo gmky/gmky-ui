@@ -7,11 +7,18 @@ export default defineEventHandler(async (event) => {
 
     const runtimeConfig = useRuntimeConfig()
     const baseURL = runtimeConfig.baseURL
-    
+
     const path = event.path.replace(/^\/api\//, '')
     const target = joinURL(baseURL, path)
-    
+
     if (!token) return proxyRequest(event, target);
 
-    return proxyRequest(event, target, { headers: { Authorization: `Bearer ${token}`}})
+    const response = await proxyRequest(event, target, { headers: { Authorization: `Bearer ${token}`}})
+
+    if (response.status == '401') {
+        window.location.href = '/admin/login'
+        return;
+    }
+
+    return response;
 })

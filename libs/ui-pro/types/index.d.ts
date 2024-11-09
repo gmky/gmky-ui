@@ -3,7 +3,7 @@ import type { Link as ULink, Avatar, Badge, Chip, Command, Tooltip } from '#ui/t
 export interface Link extends ULink {
   label: string
   class?: string
-  click?: Function
+  click?: (...args: any[]) => void
 }
 
 export interface AsideLink extends Link {

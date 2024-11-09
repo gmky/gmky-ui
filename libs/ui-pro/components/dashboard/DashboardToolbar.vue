@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import type { DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'min-h-[49px] flex-shrink-0 flex items-center border-b border-gray-200 dark:border-gray-800 px-4 py-2 gap-x-4',
@@ -34,7 +35,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

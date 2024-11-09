@@ -1,6 +1,8 @@
 <script lang="ts" setup>
+import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import RoleForm from '~/components/roles/RoleForm.vue';
-import roleService from '~/services/role.service'
+import roleService, { type FilterRoleResponse } from '~/services/role.service'
+import type { Role } from '~/types';
 
 definePageMeta({
     middleware: [
@@ -9,7 +11,6 @@ definePageMeta({
     authority: 'role:view'
 })
 
-const q = ref('')
 const isNewRoleModalOpen = ref(false)
 
 const defaultRoleTypes = ['TEMPLATE', 'CUSTOM']
@@ -17,9 +18,6 @@ const selectedRoleTypes = ref([...defaultRoleTypes])
 
 const defaultStatuses = ['ACTIVE', 'IN_ACTIVE']
 const selectedStatuses = ref([...defaultStatuses])
-
-const itemPerPages = ref(10)
-const currentPage = ref(1)
 
 const defaultColumns = [{
     key: 'id',
@@ -48,33 +46,101 @@ const defaultColumns = [{
     key: 'actions'
 }]
 
-const actions = (row) => [
-  [{
-    label: 'Update permission set',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', row.id)
-  }, {
-    label: 'Set as default',
-    icon: 'i-heroicons-exclamation-triangle'
-  }, {
-    label: row.isEnable ? 'Disable' : 'Enable',
-    icon: 'i-heroicons-adjustments-vertical'
-  }], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash'
-  }]
-]
+const modal = useModal()
 
+function openSetAsDefaultModal(row: Role) {
+    modal.open(ConfirmationModal, {
+        title: 'Update role',
+        message: row.isDefault ? 'Do you want to remove this role from default role?' : 'Do you want to set this role as default?',
+        async onConfirm() {
+            const { error } = await roleService.updateById(row.id, { isDefault: !row.isDefault })
+            addToast(error.value, 'Update role successfully', 'Failed to update role')
+            await filterRoles()
+            modal.close()
+        },
+        onClose() {
+            modal.close()
+        }
+    })
+}
+
+function openDisableRoleModal(row: Role) {
+    modal.open(ConfirmationModal, {
+        title: 'Update role',
+        message: row.isEnable ? 'Do you want to disable this role?' : 'Do you want to enable this role?',
+        async onConfirm() {
+            const { error } = await roleService.updateById(row.id, { isEnable: !row.isEnable })
+            addToast(error.value, 'Update role successfully', 'Failed to update role')
+            await filterRoles()
+            modal.close()
+        },
+        async onClose() {
+            modal.close()
+        }
+    })
+}
+
+function openDeleteRoleModal(row: Role) {
+    modal.open(ConfirmationModal, {
+        title: 'Update role',
+        message: 'Do you want to delete this role?',
+        async onClose() {
+            modal.close()
+        },
+        async onConfirm() {
+            const { error } = await roleService.deleteById(row.id)
+            addToast(error.value, 'Delete role successfully', 'Failed to delete role')
+            await filterRoles()
+            modal.close()
+        }
+    })
+}
+
+const actions = (row: Role) => [
+    [{
+        label: 'Edit permission set',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        click: () => console.log('Edit', row.id)
+    }, {
+        label: row.isDefault ? 'Remove as default' : 'Set as default',
+        icon: 'i-heroicons-exclamation-triangle',
+        click: () => {
+            openSetAsDefaultModal(row)
+        }
+    }, {
+        label: row.isEnable ? 'Disable' : 'Enable',
+        icon: 'i-heroicons-adjustments-vertical',
+        click: () => {
+            openDisableRoleModal(row)
+        }
+    }], [{
+        label: 'Delete',
+        icon: 'i-heroicons-trash',
+        click: () => {
+            openDeleteRoleModal(row)
+        }
+    }]
+]
+const router = useRoute()
+const q = ref('')
+const itemPerPages = ref(+router.query.size || 10)
+const currentPage = ref(+router.query.page || 1)
 const selectedColumns = ref(defaultColumns)
 const selectedColumnOpts = ref(defaultColumns.filter(item => !!item.label))
 const sort = ref({ column: 'id', direction: 'asc' as const })
 
 const query = computed(() => ({ type: selectedRoleTypes.value, page: currentPage.value - 1, size: itemPerPages.value }))
 
-// Fetch data
-const { data: response, pending: rolesLoading } = await roleService.filterRole(query);
+const { data: response, status } = await roleService.filterRole(query);
+const rolesLoading = computed(() => status.value == 'pending')
 const roles = computed(() => response.value.data)
-const totalItems = computed(() => response.value.meta.total || 0)
+const totalItems = computed(() => response.value.meta.total)
+
+async function filterRoles() {
+    const { data, status } = await roleService.filterRole(query);
+    response.value = data.value
+    status.value = status.value
+}
 
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
@@ -87,8 +153,8 @@ const canCreateRole = await useAuthorize('role:create')
         <UDashboardPanel grow>
             <UDashboardNavbar title="Roles" :badge="totalItems">
                 <template #right>
-                    <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
-                        placeholder="Filter roles..." class="hidden lg:block" @keydown.esc="$event.target.blur()">
+                    <UInput v-model="q" icon="i-heroicons-funnel" autocomplete="off" placeholder="Filter roles..."
+                        class="hidden lg:block" @keydown.esc="$event.target.blur()">
                         <template #trailing>
                             <UKbd value="/" />
                         </template>
@@ -99,8 +165,8 @@ const canCreateRole = await useAuthorize('role:create')
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardModal v-model="isNewRoleModalOpen" title="New user" description="Add a new user to your database" v-if="canCreateRole"
-                :ui="{ width: 'sm:max-w-md' }">
+            <UDashboardModal v-model="isNewRoleModalOpen" title="New user" description="Add a new user to your database"
+                v-if="canCreateRole" :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <RoleForm @close="isNewRoleModalOpen = false" />
             </UDashboardModal>
@@ -114,7 +180,8 @@ const canCreateRole = await useAuthorize('role:create')
                 </template>
 
                 <template #right>
-                    <UPagination v-model="currentPage" :page-count="+itemPerPages" :total="totalItems" />
+                    <UPagination v-model="currentPage" :page-count="+itemPerPages" :total="totalItems"
+                        :to="paginationUtil.nextPageLink" />
                     <USelect v-model="itemPerPages" :options="[10, 20, 50, 100]" />
                     <USelectMenu v-model="selectedColumns" icon="i-heroicons-adjustments-horizontal-solid"
                         :options="selectedColumnOpts" multiple class="hidden lg:block">
@@ -134,20 +201,17 @@ const canCreateRole = await useAuthorize('role:create')
                 </template>
 
                 <template #type-data="{ row }">
-                    <UBadge :label="row.type"
-                        :color="row.type === 'TEMPLATE' ? 'green' : 'red'"
-                        variant="subtle" class="capitalize" />
+                    <UBadge :label="row.type" :color="row.type === 'TEMPLATE' ? 'green' : 'orange'" variant="subtle"
+                        class="capitalize" />
                 </template>
 
                 <template #isDefault-data="{ row }">
-                    <UBadge :label="row.isDefault ? 'YES' : 'NO'"
-                        :color="row.isDefault ? 'green' : 'red'"
+                    <UBadge :label="row.isDefault ? 'YES' : 'NO'" :color="row.isDefault ? 'green' : 'orange'"
                         variant="subtle" class="capitalize" />
                 </template>
 
                 <template #isEnable-data="{ row }">
-                    <UBadge :label="row.isEnable ? 'ACTIVE' : 'IN ACTIVE'"
-                        :color="row.isEnable ? 'green' : 'red'"
+                    <UBadge :label="row.isEnable ? 'ACTIVE' : 'IN ACTIVE'" :color="row.isEnable ? 'green' : 'red'"
                         variant="subtle" class="capitalize" />
                 </template>
 

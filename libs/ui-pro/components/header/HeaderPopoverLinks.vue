@@ -29,6 +29,7 @@
 import type { PropType } from 'vue'
 import { twMerge } from 'tailwind-merge'
 import { getULinkProps } from '#ui/utils'
+import type { DeepPartial } from '#ui/types'
 import type { HeaderPopoverLink } from '#ui-pro/types'
 
 const appConfig = useAppConfig()
@@ -63,7 +64,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })

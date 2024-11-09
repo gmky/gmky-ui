@@ -47,5 +47,5 @@ defineProps({
 
 const { ui } = useUI('content.collapsible', undefined, config, undefined, true)
 
-provideUseId(() => useId())
+provideUseId(() => useId() as string)
 </script>

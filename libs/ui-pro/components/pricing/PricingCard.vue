@@ -15,11 +15,11 @@
         <UBadge v-if="badge" v-bind="{ variant: 'subtle', ...badge }" />
       </div>
 
-      <p v-if="description || $slots.description" :class="ui.description">
+      <div v-if="description || $slots.description" :class="ui.description">
         <slot name="description">
           {{ description }}
         </slot>
-      </p>
+      </div>
 
       <template v-if="orientation === 'horizontal'">
         <UDivider :class="ui.divider" />
@@ -40,15 +40,19 @@
 
     <template v-if="orientation === 'vertical'">
       <div :class="ui.amount.base">
-        <p v-if="discount && price" :class="ui.amount.discount">
-          {{ price }}
-        </p>
-        <p :class="ui.amount.price">
-          {{ discount || price || '&nbsp;' }}
-        </p>
-        <p v-if="cycle" :class="ui.amount.cycle">
-          {{ cycle }}
-        </p>
+        <slot name="amount">
+          <p v-if="discount && price" :class="ui.amount.discount">
+            {{ price }}
+          </p>
+          <p :class="ui.amount.price">
+            {{ discount || price || '&nbsp;' }}
+          </p>
+          <slot name="cycle">
+            <p v-if="cycle" :class="ui.amount.cycle">
+              {{ cycle }}
+            </p>
+          </slot>
+        </slot>
       </div>
 
       <div v-if="features?.length || $slots.features" :class="align === 'top' && 'order-last'" class="flex-1">
@@ -66,15 +70,19 @@
 
     <div :class="ui.right">
       <div v-if="orientation === 'horizontal'" :class="[ui.amount.base, align === 'top' && 'order-last']">
-        <p v-if="discount && price" :class="ui.amount.discount">
-          {{ price }}
-        </p>
-        <p :class="ui.amount.price">
-          {{ discount || price || '&nbsp;' }}
-        </p>
-        <p v-if="cycle" :class="ui.amount.cycle">
-          {{ cycle }}
-        </p>
+        <slot name="amount">
+          <p v-if="discount && price" :class="ui.amount.discount">
+            {{ price }}
+          </p>
+          <p :class="ui.amount.price">
+            {{ discount || price || '&nbsp;' }}
+          </p>
+          <slot name="cycle">
+            <p v-if="cycle" :class="ui.amount.cycle">
+              {{ cycle }}
+            </p>
+          </slot>
+        </slot>
       </div>
 
       <UButton v-if="button" v-bind="{ block: true, size: 'lg', ...button }" @click="button?.click" />
@@ -93,8 +101,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twJoin } from 'tailwind-merge'
-import type { Badge, Button } from '#ui/types'
-import { card as cardConfig } from '#ui/ui.config'
+import type { Badge, Button, DeepPartial } from '#ui/types'
+import type { card as cardConfig } from '#ui/ui.config'
 
 defineOptions({
   inheritAttrs: false
@@ -134,7 +142,7 @@ const props = defineProps({
     default: undefined
   },
   button: {
-    type: Object as PropType<Button & { click?: Function }>,
+    type: Object as PropType<Button & { click?: (...args: any[]) => void }>,
     default: undefined
   },
   price: {
@@ -154,7 +162,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof cardConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof cardConfig>>,
     default: () => ({})
   }
 })

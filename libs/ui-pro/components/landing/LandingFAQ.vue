@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { AccordionItem } from '#ui/types'
+import type { AccordionItem, DeepPartial } from '#ui/types'
 
 const appConfig = useAppConfig()
 
@@ -68,7 +68,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })

@@ -1,10 +1,10 @@
 import type { RouterConfig } from '@nuxt/schema'
 
-function findHashPosition (hash: string): { el: any, behavior: ScrollBehavior, top: number } | undefined {
+function findHashPosition(hash: string): { el: any, behavior: ScrollBehavior, top: number } | undefined {
   const el = document.querySelector(hash)
   // vue-router does not incorporate scroll-margin-top on its own.
   if (el) {
-    const top = parseFloat(getComputedStyle(el).scrollMarginTop)
+    const top = Number.parseFloat(getComputedStyle(el).scrollMarginTop)
 
     return {
       el: hash,
@@ -16,7 +16,7 @@ function findHashPosition (hash: string): { el: any, behavior: ScrollBehavior, t
 
 // https://router.vuejs.org/api/#routeroptions
 export default <RouterConfig>{
-  scrollBehavior (to, from, savedPosition) {
+  scrollBehavior(to, from, savedPosition) {
     const nuxtApp = useNuxtApp()
 
     if (history.state && history.state.stop) {
@@ -52,7 +52,11 @@ export default <RouterConfig>{
       })
     }
 
-    // Scroll to top of window
-    return { top: 0 }
+    // Scroll to top of window after page loaded
+    return new Promise((resolve) => {
+      nuxtApp.hooks.hookOnce('page:finish', () => {
+        setTimeout(() => resolve({ top: 0 }), 50)
+      })
+    })
   }
 }

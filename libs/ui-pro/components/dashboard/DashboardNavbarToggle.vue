@@ -11,6 +11,7 @@
 
 <script setup lang="ts">
 const appConfig = useAppConfig()
+const { $ui } = useNuxtApp()
 
 const isOpen = inject<boolean | undefined>('isOpen', undefined)
 </script>

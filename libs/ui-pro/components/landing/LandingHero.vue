@@ -14,11 +14,11 @@
           </slot>
         </h1>
 
-        <p v-if="description || $slots.description" :class="ui.description">
+        <div v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
             {{ description }}
           </slot>
-        </p>
+        </div>
 
         <div v-if="links?.length || $slots.links" :class="ui.links">
           <slot name="links">
@@ -37,7 +37,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twJoin } from 'tailwind-merge'
-import type { Button } from '#ui/types'
+import type { Button, DeepPartial } from '#ui/types'
 
 defineOptions({
   inheritAttrs: false
@@ -53,7 +53,7 @@ const props = defineProps({
     default: undefined
   },
   links: {
-    type: Array as PropType<(Button & { click?: Function })[]>,
+    type: Array as PropType<(Button & { click?: (...args: any[]) => void })[]>,
     default: () => []
   },
   orientation: {
@@ -65,7 +65,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })

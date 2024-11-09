@@ -33,11 +33,11 @@
           </div>
         </div>
 
-        <p v-if="description || $slots.description" :class="ui.description">
+        <div v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
             {{ description }}
           </slot>
-        </p>
+        </div>
 
         <slot />
       </div>
@@ -47,7 +47,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { Button } from '#ui/types'
+import type { Button, DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'relative border-b border-gray-200 dark:border-gray-800 py-8',
@@ -84,7 +84,7 @@ const props = defineProps({
     default: undefined
   },
   links: {
-    type: Array as PropType<(Button & { click?: Function })[]>,
+    type: Array as PropType<(Button & { click?: (...args: any[]) => void })[]>,
     default: () => []
   },
   class: {
@@ -92,7 +92,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

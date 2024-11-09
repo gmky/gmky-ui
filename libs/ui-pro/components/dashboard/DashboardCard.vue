@@ -16,11 +16,11 @@
               </slot>
             </p>
 
-            <p v-if="description || $slots.description" :class="ui.description">
+            <div v-if="description || $slots.description" :class="ui.description">
               <slot name="description">
                 {{ description }}
               </slot>
-            </p>
+            </div>
           </div>
         </div>
 
@@ -45,8 +45,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twMerge } from 'tailwind-merge'
-import { card as cardConfig } from '#ui/ui.config'
-import type { Button } from '#ui/types'
+import type { card as cardConfig } from '#ui/ui.config'
+import type { Button, DeepPartial } from '#ui/types'
 
 const slots = useSlots()
 
@@ -85,7 +85,7 @@ const props = defineProps({
     default: undefined
   },
   links: {
-    type: Array as PropType<(Button & { click?: Function })[]>,
+    type: Array as PropType<(Button & { click?: (...args: any[]) => void })[]>,
     default: () => []
   },
   class: {
@@ -93,7 +93,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof cardConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof cardConfig>>,
     default: () => ({})
   }
 })

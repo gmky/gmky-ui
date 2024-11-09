@@ -20,11 +20,11 @@
       </slot>
     </p>
 
-    <p v-if="description || $slots.description" :class="ui.description">
+    <div v-if="description || $slots.description" :class="ui.description">
       <slot name="description">
         {{ description }}
       </slot>
-    </p>
+    </div>
 
     <slot />
 
@@ -36,9 +36,10 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
 import { getSlotChildrenText } from '../../lib/slots'
-import { card as cardConfig } from '#ui/ui.config'
+import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
+import type { card as cardConfig } from '#ui/ui.config'
+import type { DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'relative group',
@@ -53,7 +54,6 @@ const config = {
   title: 'text-gray-900 dark:text-white text-base font-semibold truncate flex items-center gap-1.5',
   description: 'text-[15px] text-gray-500 dark:text-gray-400 mt-1'
 }
-
 
 defineOptions({
   inheritAttrs: false
@@ -78,7 +78,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config & typeof cardConfig>>,
+    type: Object as PropType<DeepPartial<typeof config & typeof cardConfig>>,
     default: () => ({})
   }
 })

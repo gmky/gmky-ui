@@ -1,13 +1,13 @@
 import { splitByCase, upperFirst } from 'scule'
-import type { NavItem, ParsedContent } from '@nuxt/content/dist/runtime/types'
+import type { NavItem, ParsedContent } from '@nuxt/content'
 import type { NavigationTree } from '#ui-pro/types'
 
-export function mapContentNavigation (navigation: NavItem[], options?: { labelAttribute?: string }): NavigationTree[] {
+export function mapContentNavigation(navigation: NavItem[], options?: { labelAttribute?: string }): NavigationTree[] {
   const navMap = {
     [options?.labelAttribute || 'title']: 'label',
-    '_path': 'to'
+    _path: 'to'
   }
-  
+
   return navigation.map((navLink) => {
     const link = {} as NavigationTree
     for (const key in navLink) {
@@ -24,11 +24,11 @@ export function mapContentNavigation (navigation: NavItem[], options?: { labelAt
   })
 }
 
-export function findPageHeadline (page: ParsedContent): string {
+export function findPageHeadline(page: ParsedContent): string {
   return page._dir?.title ? page._dir.title : splitByCase(page._dir).map(p => upperFirst(p)).join(' ')
 }
 
-export function findPageBreadcrumb (navigation?: NavItem[], page?: ParsedContent | undefined | null): NavItem[] {
+export function findPageBreadcrumb(navigation?: NavItem[], page?: ParsedContent | undefined | null): NavItem[] {
   if (!navigation || !page) {
     return []
   }

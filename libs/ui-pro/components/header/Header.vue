@@ -82,6 +82,7 @@
 import type { PropType } from 'vue'
 import { Dialog, DialogPanel, TransitionRoot, provideUseId } from '@headlessui/vue'
 import { getSlotChildrenText } from '../../lib/slots'
+import type { DeepPartial } from '#ui/types'
 import type { HeaderLink } from '#ui-pro/types'
 import { useId } from '#imports'
 
@@ -130,13 +131,14 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })
 
 const route = useRoute()
 const slots = useSlots()
+const { $ui } = useNuxtApp()
 const { isHeaderDialogOpen } = useUIState()
 const { ui, attrs } = useUI('header', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 
@@ -146,5 +148,5 @@ watch(() => route.fullPath, () => {
   isHeaderDialogOpen.value = false
 })
 
-provideUseId(() => useId())
+provideUseId(() => useId() as string)
 </script>

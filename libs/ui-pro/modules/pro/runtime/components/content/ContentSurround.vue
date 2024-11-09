@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
+import type { ParsedContent } from '@nuxt/content'
 
 const config = {
   wrapper: 'grid gap-8 sm:grid-cols-2',

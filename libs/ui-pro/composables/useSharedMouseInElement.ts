@@ -1,7 +1,7 @@
 import { defaultWindow, watchThrottled, unrefElement } from '@vueuse/core'
 import type { MaybeElementRef, MouseInElementOptions } from '@vueuse/core'
 
-export function useSharedMouseInElement (
+export function useSharedMouseInElement(
   target?: MaybeElementRef,
   options: MouseInElementOptions = {}
 ) {
@@ -16,7 +16,9 @@ export function useSharedMouseInElement (
       [targetRef, x, y],
       () => {
         const el = unrefElement(targetRef)
-        if (!el) { return }
+        if (!el) {
+          return
+        }
 
         const { left, top } = el.getBoundingClientRect()
 
@@ -24,7 +26,7 @@ export function useSharedMouseInElement (
         const eY = y.value - (top + defaultWindow!.scrollY)
 
         // We don't update the value when the mouse to too far away
-        if (Math.abs(eX) > 1500 || Math.abs(eY) > 1500 || defaultWindow!.screen.width <= 800) {
+        if (Math.abs(eX) > 1500 || Math.abs(eY) > 1500 || defaultWindow!.screen?.width <= 800) {
           return
         }
 

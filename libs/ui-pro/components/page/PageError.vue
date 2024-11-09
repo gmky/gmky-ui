@@ -18,7 +18,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import type { NuxtError } from '#app'
-import type { Button } from '#ui/types'
+import type { Button, DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'min-h-[calc(100vh-var(--header-height))] flex flex-col items-center justify-center',
@@ -57,7 +57,7 @@ const props = defineProps({
     default: 'This is not the page you\'re looking for.'
   },
   clearButton: {
-    type: Object as PropType<Button & { click?: Function }>,
+    type: Object as PropType<Button & { click?: (...args: any[]) => void }>,
     default: () => ({})
   },
   class: {
@@ -65,7 +65,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

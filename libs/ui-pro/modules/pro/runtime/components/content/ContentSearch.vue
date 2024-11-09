@@ -23,10 +23,10 @@
 import type { PropType } from 'vue'
 import { defu } from 'defu'
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
-import type { ParsedContent, NavItem, MarkdownNode } from '@nuxt/content/dist/runtime/types'
+import type { ParsedContent, NavItem, MarkdownNode } from '@nuxt/content'
+import type { UseFuseOptions } from '@vueuse/integrations/useFuse'
 import type { Group, Command } from '#ui/types'
 import type { ContentSearchLink } from '#ui-pro/types'
-import type { UseFuseOptions } from '@vueuse/integrations/useFuse'
 
 defineOptions({
   inheritAttrs: false
@@ -49,7 +49,7 @@ const config = computed(() => ({
     },
     group: {
       command: {
-        // eslint-disable-next-line quotes
+
         prefix: `!text-foreground after:content-['_>']`
       }
     },
@@ -106,6 +106,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const router = useRouter()
+// @ts-ignore
 const { navKeyFromPath } = useContentHelpers()
 const { usingInput } = useShortcuts()
 const { isContentSearchModalOpen } = useUIState()
@@ -117,7 +118,7 @@ const smallerThanSm = breakpoints.smaller('sm')
 
 const commandPaletteRef = ref<HTMLElement & { query: Ref<string>, results: { item: Command }[] }>()
 
-function fileIcon (file: ParsedContent) {
+function fileIcon(file: ParsedContent) {
   if (file.icon) return file.icon
   if (file.navigation?.icon) return file.navigation.icon
   if (props.navigation) {
@@ -129,11 +130,15 @@ function fileIcon (file: ParsedContent) {
 // Computed
 
 const isOpen = computed({
-  get () {
+  get() {
     return props.modelValue !== undefined ? props.modelValue : isContentSearchModalOpen.value
   },
-  set (value) {
-    props.modelValue !== undefined ? emit('update:modelValue', value) : (isContentSearchModalOpen.value = value)
+  set(value) {
+    if (props.modelValue !== undefined) {
+      emit('update:modelValue', value)
+    } else {
+      isContentSearchModalOpen.value = value
+    }
   }
 })
 
@@ -155,7 +160,7 @@ const fuse: ComputedRef<Partial<UseFuseOptions<Command>>> = computed(() => defu(
   resultLimit: 12
 }))
 
-function filter (query: string, commands: Command[]) {
+function filter(query: string, commands: Command[]) {
   if (!query) {
     return commands?.filter(command => !command.child)
   }
@@ -167,7 +172,7 @@ const groups = computed(() => {
   let navigationGroups: Group[] = []
   if (props.navigation?.length) {
     if (props.navigation.some(link => !!link.children?.length)) {
-      navigationGroups = (props.navigation || []).map(link => {
+      navigationGroups = (props.navigation || []).map((link) => {
         return {
           key: link._path,
           label: link.title,
@@ -187,12 +192,12 @@ const groups = computed(() => {
   return [props.links?.length && {
     key: 'links',
     label: 'Links',
-    commands: props.links.flatMap(link => {
+    commands: props.links.flatMap((link) => {
       return [link.to && {
         id: router.resolve(link.to).fullPath,
         ...link,
         icon: link.icon || ui.value.fileIcon.name
-      }, ...(link.children || []).map((child: { to: string; description: any; icon: any }) => {
+      }, ...(link.children || []).map((child: { to: string, description: any, icon: any }) => {
         return {
           id: router.resolve(child.to as string).fullPath,
           prefix: link.label,
@@ -230,7 +235,8 @@ const canToggleModal = computed(() => isOpen.value || !usingInput.value)
 
 // Methods
 
-function mapFile (file: ParsedContent, link?: NavItem): Command[] {
+function mapFile(file: ParsedContent, link?: NavItem): Command[] {
+  // @ts-ignore
   const prefix = findPageBreadcrumb(link?.children || [], file)?.map(({ title }) => title).join(' > ')
 
   return [{
@@ -259,7 +265,7 @@ function mapFile (file: ParsedContent, link?: NavItem): Command[] {
   })].filter(Boolean) as Command[]
 }
 
-function remapChildren (children: MarkdownNode[]) {
+function remapChildren(children: MarkdownNode[]) {
   return children?.map((grandChild) => {
     if (['code', 'code-inline', 'em', 'a', 'strong'].includes(grandChild.tag as string)) {
       return { type: 'text', value: grandChild.children?.find(child => child.type === 'text')?.value || '' }
@@ -269,7 +275,7 @@ function remapChildren (children: MarkdownNode[]) {
   }).filter(Boolean) as MarkdownNode[] || []
 }
 
-function concatChildren (children: MarkdownNode[]): any[] {
+function concatChildren(children: MarkdownNode[]): any[] {
   return children.map((child) => {
     if (['pre', 'style', 'video'].includes(child.tag as string)) {
       return
@@ -278,8 +284,11 @@ function concatChildren (children: MarkdownNode[]): any[] {
     let grandChildren = [...(child.children || [])]
 
     if (['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'td', 'th'].includes(child.tag as string) && grandChildren.length) {
+      // @ts-ignore
       grandChildren = remapChildren(grandChildren).reduce((acc: MarkdownNode[], grandChild) => {
+        // @ts-ignore
         if (acc.length && acc[acc.length - 1].type === 'text') {
+          // @ts-ignore
           acc[acc.length - 1].value += grandChild.value || ''
         } else {
           acc.push({ ...grandChild })
@@ -300,7 +309,7 @@ function concatChildren (children: MarkdownNode[]): any[] {
   }).filter(Boolean) as MarkdownNode[]
 }
 
-function extractUntilFirstTitle (children: MarkdownNode[]) {
+function extractUntilFirstTitle(children: MarkdownNode[]) {
   const extracted: MarkdownNode[] = []
   for (const child of children) {
     if (['h1', 'h2', 'h3'].includes(child.tag as string)) {
@@ -311,7 +320,7 @@ function extractUntilFirstTitle (children: MarkdownNode[]) {
   return extracted
 }
 
-function groupByHeading (children: MarkdownNode[]) {
+function groupByHeading(children: MarkdownNode[]) {
   const groups: Record<string, { title?: string, children: MarkdownNode[] }> = {} // grouped by path
   let hash = '' // file.page with potential `#anchor` concat
   let title: string = ''
@@ -319,7 +328,7 @@ function groupByHeading (children: MarkdownNode[]) {
     // if heading found, udpate current path
     if (['h1', 'h2', 'h3'].includes(node.tag as string)) {
       // find heading text value
-      title = node.children?.map(child => {
+      title = node.children?.map((child) => {
         if (child.type === 'text') {
           return child.value
         }
@@ -335,6 +344,7 @@ function groupByHeading (children: MarkdownNode[]) {
     }
     // push to existing/new group based on path
     if (groups[hash]) {
+      // @ts-ignore
       groups[hash].children.push(node)
     } else {
       // @ts-ignore
@@ -344,7 +354,7 @@ function groupByHeading (children: MarkdownNode[]) {
   return groups
 }
 
-function onSelect (options: Command[]) {
+function onSelect(options: Command[]) {
   isOpen.value = false
 
   const option = options[0]

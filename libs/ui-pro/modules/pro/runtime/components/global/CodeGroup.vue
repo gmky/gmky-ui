@@ -50,7 +50,7 @@ const { ui, attrs } = useUI('content.codeGroup', undefined, config, toRef(props,
 const selectedIndex = ref(0)
 defineExpose({ selectedIndex })
 
-function transformSlot (slot: any, index: number) {
+function transformSlot(slot: any, index: number) {
   if (typeof slot.type === 'symbol') {
     return slot.children?.map(transformSlot)
   }

@@ -30,7 +30,7 @@ import type { PropType } from 'vue'
 
 const config = {
   wrapper: 'relative my-5 space-y-6',
-  header: 'flex items-center relative',
+  header: 'flex items-center relative overflow-x-auto',
   border: 'absolute bottom-0 inset-x-0 w-full h-px bg-gray-200 dark:bg-gray-800',
   tab: {
     base: 'px-4 py-2.5 font-semibold text-sm/6 flex items-center gap-1.5 border-b z-[1] focus-visible:outline-primary',
@@ -67,7 +67,6 @@ const rerenderCounter = ref(1)
 // Computed
 
 const tabs = computed(() => {
-  rerenderCounter.value
   return slots.default?.().map((slot, index) => {
     return {
       index,

@@ -1,5 +1,5 @@
 <template>
-  <USlideover v-model="isOpen" :ui="ui" v-bind="attrs">
+  <USlideover v-model="isOpen" :prevent-close="preventClose" :ui="ui" v-bind="attrs">
     <div :class="[ui.header.base, ui.header.padding]">
       <slot name="header">
         <p v-if="title || $slots.title" :class="ui.title">
@@ -24,8 +24,8 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { slideover as slideoverConfig } from '#ui/ui.config'
-import type { Button } from '#ui/types'
+import type { slideover as slideoverConfig } from '#ui/ui.config'
+import type { Button, DeepPartial } from '#ui/types'
 
 const appConfig = useAppConfig()
 
@@ -66,12 +66,16 @@ const props = defineProps({
     type: String,
     default: undefined
   },
+  preventClose: {
+    type: Boolean,
+    default: false
+  },
   closeButton: {
     type: Object as PropType<Button | null>,
     default: () => ({})
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof slideoverConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof slideoverConfig>>,
     default: () => ({})
   }
 })
@@ -79,10 +83,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const isOpen = computed({
-  get () {
+  get() {
     return props.modelValue
   },
-  set (value) {
+  set(value) {
     emit('update:modelValue', value)
   }
 })

@@ -24,16 +24,16 @@
           </slot>
         </h2>
 
-        <p v-if="description || $slots.description" :class="ui.description">
+        <div v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
             {{ description }}
           </slot>
-        </p>
+        </div>
 
         <slot />
       </div>
 
-      <div v-if="authors?.length || date" :class="ui.authors.wrapper">
+      <div v-if="(authors?.length || $slots.authors) || (date || $slots.date)" :class="ui.authors.wrapper">
         <slot name="authors">
           <UAvatarGroup v-if="authors?.length">
             <UAvatar
@@ -51,7 +51,7 @@
         </slot>
 
         <slot name="date">
-          <time v-if="date" :datetime="new Date(date).toISOString()" :class="ui.date">
+          <time v-if="date" :datetime="datetime" :class="ui.date">
             {{ date }}
           </time>
         </slot>
@@ -63,9 +63,9 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twJoin } from 'tailwind-merge'
-import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
 import { getSlotChildrenText } from '../../lib/slots'
-import type { Avatar, Badge } from '#ui/types'
+import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
+import type { Avatar, Badge, DeepPartial } from '#ui/types'
 import type { NuxtLinkProps } from '#app'
 
 defineOptions({
@@ -112,7 +112,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })
@@ -152,4 +152,15 @@ const { ui, attrs } = useUI('blog.post', toRef(props, 'ui'), config, toRef(props
 
 const nuxtLinkBind = computed(() => getNuxtLinkProps(props))
 const ariaLabel = computed(() => (props.title || (slots.title && getSlotChildrenText(slots.title())) || 'Post link').trim())
+const datetime = computed(() => {
+  if (!props.date) {
+    return undefined
+  }
+
+  try {
+    return new Date(props.date).toISOString()
+  } catch {
+    return undefined
+  }
+})
 </script>

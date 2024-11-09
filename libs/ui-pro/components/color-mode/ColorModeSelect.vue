@@ -1,13 +1,13 @@
 <template>
   <ClientOnly v-if="!colorMode?.forced">
-    <USelectMenu v-bind="$attrs" v-model="preference" :leading-icon="preference.icon" :options="options">
+    <USelectMenu v-bind="$attrs" v-model="preference" :leading-icon="preference?.icon" :options="options">
       <template #label>
-        <span class="truncate">{{ preference.label }}</span>
+        <span class="truncate">{{ preference?.label }}</span>
       </template>
     </USelectMenu>
 
     <template #fallback>
-      <USelectMenu v-bind="$attrs" :model-value="options[0]" :leading-icon="options[0].icon" disabled />
+      <USelectMenu v-bind="$attrs" :model-value="options[0]" :leading-icon="options[0]?.icon" disabled />
     </template>
   </ClientOnly>
 </template>
@@ -27,10 +27,10 @@ const options = computed(() => [
 ])
 
 const preference = computed({
-  get () {
+  get() {
     return options.value.find(option => option.value === colorMode.preference) || options.value[0]
   },
-  set (option) {
+  set(option) {
     colorMode.preference = option!.value
   }
 })

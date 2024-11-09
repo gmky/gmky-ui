@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import colors from '#tailwind-config/theme/colors'
-import uiColors from '#ui-colors'
+import type uiColors from '#ui-colors'
 
 const appConfig = useAppConfig()
 

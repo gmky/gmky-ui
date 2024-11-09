@@ -1,6 +1,6 @@
 import type { Meta, PermissionSet } from "~/types"
 
-type FilterPermissionSetResponse = {
+export type FilterPermissionSetResponse = {
     data: PermissionSet[],
     meta: Meta
 }

@@ -3,9 +3,9 @@
     ref="el"
     :style="{
       '--x': `${elementX}px`,
-      '--y': `${elementY}px`,
+      '--y': `${elementY}px`
     }"
-    :class="[ui.wrapper, to && ui.to]"
+    :class="[ui.wrapper, to && [ui.to, 'to']]"
     v-bind="attrs"
   >
     <UCard :ui="ui">
@@ -26,11 +26,11 @@
           </slot>
         </p>
 
-        <p v-if="description || $slots.description" :class="ui.description">
+        <div v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
             {{ description }}
           </slot>
-        </p>
+        </div>
 
         <slot name="container" />
       </div>
@@ -43,11 +43,12 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twJoin } from 'tailwind-merge'
-import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
 import { getSlotChildrenText } from '../../lib/slots'
+import { nuxtLinkProps, getNuxtLinkProps } from '#ui/utils'
 import colors from '#tailwind-config/theme/colors'
-import uiColors from '#ui-colors'
-import { card as cardConfig } from '#ui/ui.config'
+import type uiColors from '#ui-colors'
+import type { card as cardConfig } from '#ui/ui.config'
+import type { DeepPartial } from '#ui/types'
 
 defineOptions({
   inheritAttrs: false
@@ -80,7 +81,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof cardConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof cardConfig>>,
     default: () => ({})
   }
 })
@@ -109,7 +110,7 @@ const config = computed(() => {
 
   return {
     wrapper: 'relative group isolate rounded-xl background-gradient ring-1 ring-gray-200 dark:ring-gray-800 before:hidden before:lg:block before:absolute before:-inset-[2px] before:h-[calc(100%+4px)] before:w-[calc(100%+4px)] before:z-[-1] before:rounded-[13px] flex-1 flex flex-col shadow',
-    to: 'hover:ring-primary-500 dark:hover:ring-primary-400 transition-shadow duration-200',
+    to: 'transition-shadow duration-200',
     base: 'flex-1 flex flex-col overflow-hidden',
     container: '',
     body: {
@@ -140,21 +141,25 @@ const ariaLabel = computed(() => (props.title || (slots.title && getSlotChildren
 
 <style scoped>
 .background-gradient::before {
-  background: radial-gradient(
-    250px circle at var(--x) var(--y),
-    v-bind(colorLight) 0%,
-    transparent 100%
-  );
+  background: radial-gradient(250px circle at var(--x) var(--y),
+      v-bind(colorLight) 0%,
+      transparent 100%);
   will-change: background;
+}
+
+.to:hover {
+  --tw-ring-color: v-bind(colorLight);
 }
 
 .dark {
   .background-gradient::before {
-    background: radial-gradient(
-      250px circle at var(--x) var(--y),
-      v-bind(colorDark) 0%,
-      transparent 100%
-    );
+    background: radial-gradient(250px circle at var(--x) var(--y),
+        v-bind(colorDark) 0%,
+        transparent 100%);
+  }
+
+  .to:hover {
+    --tw-ring-color: v-bind(colorDark);
   }
 }
 </style>

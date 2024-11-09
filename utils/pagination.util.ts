@@ -8,5 +8,12 @@ export default {
           size: 20
       }
     }
+  },
+  nextPageLink: (page: number) => {
+    return {
+      query: {
+        page
+      }
+    }
   }
 }

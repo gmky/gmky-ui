@@ -36,8 +36,8 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { getNuxtLinkProps } from '#ui/utils'
-import type { Avatar } from '#ui/types'
-import { card as cardConfig } from '#ui/ui.config'
+import type { Avatar, DeepPartial } from '#ui/types'
+import type { card as cardConfig } from '#ui/ui.config'
 import { NuxtLink } from '#components'
 import type { NuxtLinkProps } from '#app'
 
@@ -71,7 +71,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof cardConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof cardConfig>>,
     default: () => ({})
   }
 })

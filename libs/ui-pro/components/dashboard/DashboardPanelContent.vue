@@ -6,6 +6,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import type { DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'p-4 flex-1 flex flex-col overflow-y-auto'
@@ -21,7 +22,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

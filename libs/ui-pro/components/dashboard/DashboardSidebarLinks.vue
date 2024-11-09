@@ -112,7 +112,7 @@ import { Disclosure, DisclosureButton, DisclosurePanel, provideUseId } from '@he
 // @ts-ignore
 import { twMerge, twJoin } from 'tailwind-merge'
 import { getULinkProps } from '#ui/utils'
-import type { ChipColor } from '#ui/types'
+import type { ChipColor, Strategy, DeepPartial } from '#ui/types'
 import type { DashboardSidebarLink } from '#ui-pro/types'
 import { useId } from '#imports'
 
@@ -159,7 +159,7 @@ const config = computed(() => ({
     inactive: 'bg-gray-400 dark:bg-gray-500 group-hover:bg-gray-700 dark:group-hover:bg-gray-200'
   },
   tooltip: {
-    strategy: 'override',
+    strategy: 'override' as Strategy,
     transition: {
       enterActiveClass: 'transition ease-out duration-200',
       enterFromClass: 'opacity-0',
@@ -197,7 +197,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })
@@ -218,34 +218,36 @@ const isDragging = ref(false)
 
 const { ui, attrs } = useUI('dashboard.sidebar.links', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 
-function onEnter (_el: Element, done: () => void) {
+function onEnter(_el: Element, done: () => void) {
   const el = _el as HTMLElement
   el.style.height = '0'
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   el.offsetHeight // Trigger a reflow, flushing the CSS changes
   el.style.height = el.scrollHeight + 'px'
 
   el.addEventListener('transitionend', done, { once: true })
 }
 
-function onBeforeLeave (_el: Element) {
+function onBeforeLeave(_el: Element) {
   const el = _el as HTMLElement
   el.style.height = el.scrollHeight + 'px'
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
   el.offsetHeight // Trigger a reflow, flushing the CSS changes
 }
 
-function onAfterEnter (_el: Element) {
+function onAfterEnter(_el: Element) {
   const el = _el as HTMLElement
   el.style.height = 'auto'
 }
 
-function onLeave (_el: Element, done: () => void) {
+function onLeave(_el: Element, done: () => void) {
   const el = _el as HTMLElement
   el.style.height = '0'
 
   el.addEventListener('transitionend', done, { once: true })
 }
 
-function onDrop (results: { removedIndex: number, addedIndex: number, payload: any }) {
+function onDrop(results: { removedIndex: number, addedIndex: number, payload: any }) {
   const { removedIndex, addedIndex, payload } = results
   const links = [...props.links]
 
@@ -265,12 +267,12 @@ function onDrop (results: { removedIndex: number, addedIndex: number, payload: a
   emit('update:links', links)
 }
 
-function fixActionRestriction () {
+function fixActionRestriction() {
   document.body.classList.remove(
     'smooth-dnd-no-user-select',
     'smooth-dnd-disable-touch-action'
   )
 }
 
-provideUseId(() => useId())
+provideUseId(() => useId() as string)
 </script>

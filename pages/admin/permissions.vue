@@ -35,23 +35,6 @@ const defaultColumns = [{
     key: 'actions'
 }]
 
-const actions = (row) => [
-  [{
-    label: 'Edit',
-    icon: 'i-heroicons-pencil-square-20-solid',
-    click: () => console.log('Edit', row.id)
-  }, {
-    label: 'Set as default',
-    icon: 'i-heroicons-exclamation-triangle'
-  }, {
-    label: row.isEnable ? 'Disable' : 'Enable',
-    icon: 'i-heroicons-adjustments-vertical'
-  }], [{
-    label: 'Delete',
-    icon: 'i-heroicons-trash'
-  }]
-]
-
 const selectedColumns = ref(defaultColumns)
 const selectedColumnOpts = ref(defaultColumns.filter(item => !!item.label))
 const sort = ref({ column: 'id', direction: 'asc' as const })
@@ -115,12 +98,6 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
                     <div class="flex items-center gap-3">
                         <span class="text-gray-900 dark:text-white font-medium">{{ row.name }}</span>
                     </div>
-                </template>
-
-                <template #actions-data="{ row }">
-                    <UDropdown :items="actions(row)">
-                        <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
-                    </UDropdown>
                 </template>
             </UTable>
         </UDashboardPanel>

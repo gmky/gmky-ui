@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 const appConfig = useAppConfig()
+const { $ui } = useNuxtApp()
 const { toggleDashboardSearch } = useUIState()
 const { metaSymbol } = useShortcuts()
 

@@ -23,8 +23,8 @@
 import type { PropType } from 'vue'
 import { defu } from 'defu'
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
-import type { Group, Command } from '#ui/types'
 import type { UseFuseOptions } from '@vueuse/integrations/useFuse'
+import type { Group, Command, DeepPartial } from '#ui/types'
 
 defineOptions({
   inheritAttrs: false
@@ -47,7 +47,7 @@ const config = computed(() => ({
     },
     group: {
       command: {
-        // eslint-disable-next-line quotes
+
         prefix: `!text-foreground after:content-['_>']`
       }
     },
@@ -84,7 +84,7 @@ const props = defineProps({
     default: false
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })
@@ -105,11 +105,15 @@ const commandPaletteRef = ref<HTMLElement & { query: Ref<string>, results: { ite
 // Computed
 
 const isOpen = computed({
-  get () {
+  get() {
     return props.modelValue !== undefined ? props.modelValue : isDashboardSearchModalOpen.value
   },
-  set (value) {
-    props.modelValue !== undefined ? emit('update:modelValue', value) : (isDashboardSearchModalOpen.value = value)
+  set(value) {
+    if (props.modelValue !== undefined) {
+      emit('update:modelValue', value)
+    } else {
+      isDashboardSearchModalOpen.value = value
+    }
   }
 })
 
@@ -156,7 +160,7 @@ const canToggleModal = computed(() => isOpen.value || !usingInput.value)
 
 // Methods
 
-function onSelect (options: Command[]) {
+function onSelect(options: Command[]) {
   isOpen.value = false
 
   const option = options[0]

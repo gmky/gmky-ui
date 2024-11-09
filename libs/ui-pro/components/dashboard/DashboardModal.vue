@@ -1,5 +1,12 @@
 <template>
-  <UModal v-model="isOpen" :overlay="!smallerThanSm" :transition="!smallerThanSm" :ui="ui" v-bind="attrs">
+  <UModal
+    v-model="isOpen"
+    :overlay="!smallerThanSm"
+    :transition="!smallerThanSm"
+    :prevent-close="preventClose"
+    :ui="ui"
+    v-bind="attrs"
+  >
     <div :class="[ui.header.base, ui.header.padding]">
       <slot name="header">
         <div :class="ui.header.inner">
@@ -42,8 +49,8 @@
 import type { PropType } from 'vue'
 import { useBreakpoints, breakpointsTailwind } from '@vueuse/core'
 import { twMerge } from 'tailwind-merge'
-import { modal as modalConfig } from '#ui/ui.config'
-import type { Button } from '#ui/types'
+import type { modal as modalConfig } from '#ui/ui.config'
+import type { Button, DeepPartial } from '#ui/types'
 
 const appConfig = useAppConfig()
 const slots = useSlots()
@@ -104,12 +111,16 @@ const props = defineProps({
     type: String,
     default: undefined
   },
+  preventClose: {
+    type: Boolean,
+    default: false
+  },
   closeButton: {
     type: Object as PropType<Button | null>,
     default: () => ({})
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value & typeof modalConfig>>,
+    type: Object as PropType<DeepPartial<typeof config.value & typeof modalConfig>>,
     default: () => ({})
   }
 })
@@ -117,10 +128,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const isOpen = computed({
-  get () {
+  get() {
     return props.modelValue
   },
-  set (value) {
+  set(value) {
     emit('update:modelValue', value)
   }
 })

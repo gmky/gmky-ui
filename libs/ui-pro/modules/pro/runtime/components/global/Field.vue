@@ -60,8 +60,12 @@ const props = defineProps({
   class: {
     type: [String, Object, Array] as PropType<any>,
     default: undefined
+  },
+  ui: {
+    type: Object as PropType<Partial<typeof config>>,
+    default: () => ({})
   }
 })
 
-const { ui, attrs } = useUI('content.field', undefined, config, toRef(props, 'class'), true)
+const { ui, attrs } = useUI('content.field', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 </script>

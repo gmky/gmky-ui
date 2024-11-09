@@ -22,11 +22,11 @@
           </slot>
         </h2>
 
-        <p v-if="description || $slots.description" :class="ui.description">
+        <div v-if="description || $slots.description" :class="ui.description">
           <slot name="description">
             {{ description }}
           </slot>
-        </p>
+        </div>
 
         <dl v-if="align !== 'center' && features?.length" :class="[ui.features.wrapper.base, ui.features.wrapper.list]">
           <div v-for="feature in features" :key="feature.name" :class="ui.features.base">
@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import { twJoin, twMerge } from 'tailwind-merge'
-import type { Button } from '#ui/types'
+import type { Button, DeepPartial } from '#ui/types'
 
 const appConfig = useAppConfig()
 
@@ -110,7 +110,7 @@ const props = defineProps({
     default: () => []
   },
   links: {
-    type: Array as PropType<(Button & { click?: Function })[]>,
+    type: Array as PropType<(Button & { click?: (...args: any[]) => void })[]>,
     default: () => []
   },
   slot: {
@@ -126,7 +126,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })

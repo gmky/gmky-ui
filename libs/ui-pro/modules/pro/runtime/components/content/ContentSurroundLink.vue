@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { ParsedContent } from '@nuxt/content/dist/runtime/types'
+import type { ParsedContent } from '@nuxt/content'
 
 const config = {
   wrapper: 'block px-6 py-8 border not-prose rounded-lg border-gray-200 dark:border-gray-800 hover:bg-gray-100/50 dark:hover:bg-gray-800/50 group',

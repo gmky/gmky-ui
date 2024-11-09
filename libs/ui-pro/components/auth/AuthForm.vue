@@ -7,17 +7,17 @@
         </slot>
       </div>
 
-      <p v-if="title || $slots.title" :class="ui.title">
+      <div v-if="title || $slots.title" :class="ui.title">
         <slot name="title">
           {{ title }}
         </slot>
-      </p>
+      </div>
 
-      <p v-if="description || $slots.description" :class="ui.description">
+      <div v-if="description || $slots.description" :class="ui.description">
         <slot name="description">
           {{ description }}
         </slot>
-      </p>
+      </div>
     </div>
 
     <div :class="ui.container">
@@ -50,6 +50,22 @@
           <slot :name="`${field.name}-field`" v-bind="{ state, field: omit(field, ['description', 'help', 'hint', 'size']) }">
             <UCheckbox v-if="field.type === 'checkbox'" v-model="state[field.name]" v-bind="omit(field, ['description', 'help', 'hint', 'size'])" />
             <USelectMenu v-else-if="field.type === 'select'" v-model="state[field.name]" v-bind="omit(field, ['description', 'help', 'hint', 'size'])" />
+            <UInput
+              v-else-if="field.type === 'password'"
+              v-model="state[field.name]"
+              :type="passwordVisibility ? 'text' : 'password'"
+              v-bind="omit(field, ['label', 'description', 'help', 'hint', 'size', 'type'])"
+              :ui="{ icon: { trailing: { pointer: '' } } }"
+            >
+              <template v-if="passwordToggle" #trailing>
+                <UButton
+                  v-bind="{ ...ui.default.passwordToggle, ...passwordToggle }"
+                  :icon="passwordVisibility ? ui.passwordToggle.hideIcon : ui.passwordToggle.showIcon"
+                  :padded="false"
+                  @click="togglePasswordVisibility"
+                />
+              </template>
+            </UInput>
             <UInput v-else v-model="state[field.name]" v-bind="omit(field, ['label', 'description', 'help', 'hint', 'size'])" />
           </slot>
           <template v-if="$slots[`${field.name}-label`]" #label>
@@ -65,22 +81,25 @@
             <slot :name="`${field.name}-help`" />
           </template>
         </UFormGroup>
+
         <slot name="validation" />
+
         <UButton type="submit" block :loading="loading" v-bind="{ ...ui.default.submitButton, ...submitButton }" />
       </UForm>
     </div>
 
-    <p v-if="$slots.footer" :class="ui.footer">
+    <div v-if="$slots.footer" :class="ui.footer">
       <slot name="footer" />
-    </p>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, reactive, computed } from 'vue'
 import type { PropType } from 'vue'
 import { twJoin } from 'tailwind-merge'
 import { omit } from '#ui/utils'
-import type { Button, FormError, FormEventType, FormGroupSize } from '#ui/types'
+import type { Button, FormError, FormEventType, FormGroupSize, DeepPartial } from '#ui/types'
 
 defineOptions({
   inheritAttrs: false
@@ -124,10 +143,14 @@ const props = defineProps({
     default: () => []
   },
   providers: {
-    type: Array as PropType<(Button & { click?: Function })[]>,
+    type: Array as PropType<(Button & { click?: (...args: any[]) => void })[]>,
     default: () => []
   },
   submitButton: {
+    type: Object as PropType<Button>,
+    default: () => ({})
+  },
+  passwordToggle: {
     type: Object as PropType<Button>,
     default: () => ({})
   },
@@ -152,7 +175,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config.value>>,
+    type: Object as PropType<DeepPartial<typeof config.value>>,
     default: () => ({})
   }
 })
@@ -178,9 +201,17 @@ const config = computed(() => {
     providers: 'space-y-3',
     form: 'space-y-6',
     footer: 'text-sm text-gray-500 dark:text-gray-400 mt-2',
+    passwordToggle: {
+      showIcon: 'i-heroicons-eye',
+      hideIcon: 'i-heroicons-eye-slash'
+    },
     default: {
       submitButton: {
         label: 'Continue'
+      },
+      passwordToggle: {
+        color: 'gray' as const,
+        variant: 'link' as const
       }
     }
   }
@@ -194,6 +225,12 @@ const state = reactive(Object.values(props.fields).reduce((acc, { name, value })
   acc[name] = value
   return acc
 }, {} as Record<string, any>))
+
+const passwordVisibility = ref(false)
+
+function togglePasswordVisibility() {
+  passwordVisibility.value = !passwordVisibility.value
+}
 
 // Expose
 

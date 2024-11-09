@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
 import colors from '#tailwind-config/theme/colors'
-import uiColors from '#ui-colors'
+import type uiColors from '#ui-colors'
 
 const appConfig = useAppConfig()
 
@@ -69,14 +69,14 @@ const colorLight = computed(() => {
     return 'rgb(var(--color-primary-DEFAULT))'
   }
   // @ts-ignore
-  return colors[props.color]?.['500'] || colors[props.color] || props.color
+  return colors[props.color]?.['500'] || (colors[props.color] as string) || props.color
 })
 const colorDark = computed(() => {
   if (props.color === 'primary') {
     return 'rgb(var(--color-primary-DEFAULT))'
   }
   // @ts-ignore
-  return colors[props.color]?.['400'] || colors[props.color] || props.color
+  return colors[props.color]?.['400'] || (colors[props.color] as string) || props.color
 })
 
 const target = computed(() => props.target || (props.to && props.to.startsWith('http') ? '_blank' : undefined))

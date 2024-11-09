@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import type { Badge } from '#ui/types'
+import type { Badge, DeepPartial } from '#ui/types'
 
 const config = {
   wrapper: 'h-[--header-height] flex-shrink-0 flex items-center border-b border-gray-200 dark:border-gray-800 px-4 gap-x-4 min-w-0',
@@ -79,7 +79,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })

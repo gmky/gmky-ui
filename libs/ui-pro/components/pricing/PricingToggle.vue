@@ -20,6 +20,7 @@
 import type { PropType } from 'vue'
 import { Switch, provideUseId } from '@headlessui/vue'
 import { useId } from '#imports'
+import type { DeepPartial } from '#ui/types'
 
 defineOptions({
   inheritAttrs: false
@@ -43,7 +44,7 @@ const props = defineProps({
     default: undefined
   },
   ui: {
-    type: Object as PropType<Partial<typeof config>>,
+    type: Object as PropType<DeepPartial<typeof config>>,
     default: () => ({})
   }
 })
@@ -61,15 +62,15 @@ const config = {
 }
 
 const isYearly = computed({
-  get () {
+  get() {
     return props.modelValue
   },
-  set (value) {
+  set(value) {
     emit('update:modelValue', value)
   }
 })
 
 const { ui, attrs } = useUI('pricing.toggle', toRef(props, 'ui'), config, toRef(props, 'class'), true)
 
-provideUseId(() => useId())
+provideUseId(() => useId() as string)
 </script>
