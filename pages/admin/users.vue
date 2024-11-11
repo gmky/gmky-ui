@@ -69,11 +69,12 @@ async function filterUser() {
   status.value = status.value
 }
 
+const toast = useToast()
 async function toggleUserStatus(row: User) {
   const userId = row.userId
   const userStatus = row.status == 'LOCKED' ? 'ACTIVE' : 'LOCKED'
   const { error } = await userService.updateUser(userId, { status: userStatus })
-  addToast(error.value, 'Update user successfully', 'Failed to update user')
+  notificationUtil.toastRes(toast, error.value, 'Update user successfully', 'Failed to update user')
 }
 
 async function closeUpdateRoleModel() {
@@ -89,7 +90,7 @@ function openLogoutConfirmationModal(row: User) {
     async onConfirm() {
       const userId = row.userId
       const { error } = await userService.logout(userId)
-      addToast(error.value, 'Logout user successfully', 'Failed to logout user')
+      notificationUtil.toastRes(toast, error.value, 'Logout user successfully', 'Failed to logout user')
       modal.close()
     },
     async onClose() {

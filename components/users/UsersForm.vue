@@ -47,128 +47,59 @@ async function searchRole(q: string) {
   return response.value.data
 }
 
+const toast = useToast()
+
 async function onSubmit(event: FormSubmitEvent<any>) {
   state.roles = selected.value.map(item => item.id);
   const { error } = await userService.createUser(state);
-  addToast(error.value, 'Create new user successfully', 'Failed to create new user')
+  notificationUtil.toastRes(toast, error.value, 'Create new user successfully', 'Failed to create new user')
   emit('close')
 }
 </script>
 
 <template>
-  <UForm
-    :validate="validate"
-    :validate-on="['submit', 'input']"
-    :state="state"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
-    <UFormGroup
-      label="Username"
-      name="username"
-    >
-      <UInput
-        v-model="state.username"
-        type="username"
-        placeholder="gmky"
-      />
+  <UForm :validate="validate" :validate-on="['submit', 'input']" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Username" name="username">
+      <UInput v-model="state.username" type="username" placeholder="gmky" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Password"
-      name="password"
-    >
-      <UInput
-        v-model="state.password"
-        type="password"
-        placeholder="Enter your password"
-      />
+    <UFormGroup label="Password" name="password">
+      <UInput v-model="state.password" type="password" placeholder="Enter your password" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Password Confirmation"
-      name="password-confirmation"
-    >
-      <UInput
-        v-model="state.passwordConfirmation"
-        type="password"
-        placeholder="Re-enter your password"
-      />
+    <UFormGroup label="Password Confirmation" name="password-confirmation">
+      <UInput v-model="state.passwordConfirmation" type="password" placeholder="Re-enter your password" />
     </UFormGroup>
 
-    <UFormGroup
-      label="First Name"
-      name="first-name"
-    >
-      <UInput
-        v-model="state.firstName"
-        placeholder="John"
-        autofocus
-      />
+    <UFormGroup label="First Name" name="first-name">
+      <UInput v-model="state.firstName" placeholder="John" autofocus />
     </UFormGroup>
 
-    <UFormGroup
-      label="Last Name"
-      name="last-name"
-    >
-      <UInput
-        v-model="state.lastName"
-        placeholder="Doe"
-        autofocus
-      />
+    <UFormGroup label="Last Name" name="last-name">
+      <UInput v-model="state.lastName" placeholder="Doe" autofocus />
     </UFormGroup>
 
-    <UFormGroup
-      label="Email"
-      name="email"
-    >
-      <UInput
-        v-model="state.email"
-        type="email"
-        placeholder="john.doe@example.com"
-      />
+    <UFormGroup label="Email" name="email">
+      <UInput v-model="state.email" type="email" placeholder="john.doe@example.com" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Status"
-      name="status"
-    >
+    <UFormGroup label="Status" name="status">
       <USelect v-model="state.status" :options="statusOpts" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Role"
-      name="role"
-    >
+    <UFormGroup label="Role" name="role">
       <template #description>
         <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
       </template>
-      <USelectMenu
-        v-model="selected"
-        :loading="roleLoading"
-        :searchable="searchRole"
-        placeholder="Search for a roles..."
-        class="space-y-2 space-x-4"
-        option-attribute="name"
-        multiple
-        trailing
-        by="id"
-      >
+      <USelectMenu v-model="selected" :loading="roleLoading" :searchable="searchRole"
+        placeholder="Search for a roles..." class="space-y-2 space-x-4" option-attribute="name" multiple trailing
+        by="id">
       </USelectMenu>
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton
-        label="Cancel"
-        color="gray"
-        variant="ghost"
-        @click="emit('close')"
-      />
-      <UButton
-        type="submit"
-        label="Save"
-        color="black"
-      />
+      <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" label="Save" color="black" />
     </div>
   </UForm>
 </template>

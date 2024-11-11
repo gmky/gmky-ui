@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
-import psService, { type FilterPermissionSetResponse } from '~/services/ps.service';
+import UpdatePsPermission from '~/components/ps/UpdatePsPermission.vue';
+import psService from '~/services/ps.service';
 import type { PermissionSet } from '~/types';
 
 definePageMeta({
@@ -12,6 +13,7 @@ definePageMeta({
 
 const q = ref('')
 const isNewPSModalOpen = ref(false)
+const isUpdatePsModalOpen = ref(false)
 
 const defaultPSTypes = ['TEMPLATE', 'CUSTOM']
 const selectedPSTypes = ref([...defaultPSTypes])
@@ -44,7 +46,7 @@ const modal = useModal()
 
 function openDeleteRoleModal(row: PermissionSet) {
     modal.open(ConfirmationModal, {
-        title: 'Update permission set',
+        title: 'Delete permission set',
         message: 'Do you want to delete this permission set?',
         async onClose() {
             modal.close()
@@ -56,11 +58,16 @@ function openDeleteRoleModal(row: PermissionSet) {
     })
 }
 
-const actions = (row) => [
+const selectedPsId = ref(null);
+
+const actions = (row: PermissionSet) => [
     [{
         label: 'Edit permission',
         icon: 'i-heroicons-pencil-square-20-solid',
-        click: () => console.log('Edit', row.id)
+        click: () => {
+            isUpdatePsModalOpen.value = true
+            selectedPsId.value = row.id
+        }
     }], [{
         label: 'Delete',
         icon: 'i-heroicons-trash',
@@ -86,11 +93,10 @@ async function filterPS() {
     status.value = status.value
 }
 
-await filterPS()
-
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
 const canCreatePS = await useAuthorize('permissionset:create')
+const canUpdatePS = await useAuthorize('permissionset:edit')
 
 </script>
 <template>
@@ -115,6 +121,11 @@ const canCreatePS = await useAuthorize('permissionset:create')
                 v-if="canCreatePS" :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <PsForm @close="isNewPSModalOpen = false" />
+            </UDashboardModal>
+
+            <UDashboardModal v-model="isUpdatePsModalOpen" title="Update permission set"
+                description="Assign/Unassign permission" v-if="canUpdatePS" :ui="{ width: 'sm:max-w-md' }">
+                <UpdatePsPermission @close="isUpdatePsModalOpen = false" :ps-id="selectedPsId" />
             </UDashboardModal>
 
             <UDashboardToolbar>

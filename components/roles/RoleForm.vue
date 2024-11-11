@@ -44,11 +44,11 @@ const validate = (state: any): FormError[] => {
   return errors
 }
 
-// const { $toast } = useNuxtApp()
+const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<any>) {
   state.psIdList = selected.value.map(item => item.id);
   const { error } = await roleService.createRole(state);
-  addToast(error.value, 'Create role successfully', 'Failed to create role')
+  notificationUtil.toastRes(toast, error.value, 'Create role successfully', 'Failed to create role')
   emit('close')
 }
 
@@ -56,7 +56,7 @@ const psLoading = ref(false)
 const selected = ref([] as PermissionSet[])
 async function searchPermissionSet(q: string) {
   psLoading.value = true
-  const query = { type: ['TEMPLATE', 'CUSTOM'], name: q}
+  const query = { type: ['TEMPLATE', 'CUSTOM'], name: q }
   const { data: response } = await psService.filterPermissionSet(query)
 
   psLoading.value = false
@@ -67,82 +67,35 @@ async function searchPermissionSet(q: string) {
 </script>
 
 <template>
-  <UForm
-    :validate="validate"
-    :validate-on="['submit', 'input']"
-    :state="state"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
-    <UFormGroup
-      label="Name"
-      name="name"
-    >
-      <UInput
-        v-model="state.name"
-        type="text"
-        placeholder="Role name"
-      />
+  <UForm :validate="validate" :validate-on="['submit', 'input']" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Name" name="name">
+      <UInput v-model="state.name" type="text" placeholder="Role name" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Description"
-      name="description"
-    >
-      <UInput
-        v-model="state.description"
-        type="text"
-        placeholder="Enter role description"
-      />
+    <UFormGroup label="Description" name="description">
+      <UInput v-model="state.description" type="text" placeholder="Enter role description" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Enable"
-      name="is-enable"
-    >
+    <UFormGroup label="Enable" name="is-enable">
       <USelect v-model="state.isEnable" :options="isEnableOpts" option-attribute="name" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Default"
-      name="is-default"
-    >
+    <UFormGroup label="Default" name="is-default">
       <USelect v-model="state.isDefault" :options="isDefaultOpts" option-attribute="name" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Permission Set"
-      name="permission-set"
-    >
+    <UFormGroup label="Permission Set" name="permission-set">
       <template #description>
         <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
       </template>
-      <USelectMenu
-        v-model="selected"
-        :loading="psLoading"
-        :searchable="searchPermissionSet"
-        :searchable-lazy="true"
-        placeholder="Search for a permission set..."
-        class="space-y-2 space-x-4"
-        option-attribute="name"
-        multiple
-        trailing
-        by="id"
-      />
+      <USelectMenu v-model="selected" :loading="psLoading" :searchable="searchPermissionSet" :searchable-lazy="true"
+        placeholder="Search for a permission set..." class="space-y-2 space-x-4" option-attribute="name" multiple
+        trailing by="id" />
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton
-        label="Cancel"
-        color="gray"
-        variant="ghost"
-        @click="emit('close')"
-      />
-      <UButton
-        type="submit"
-        label="Save"
-        color="black"
-      />
+      <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" label="Save" color="black" />
     </div>
   </UForm>
 </template>

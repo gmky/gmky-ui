@@ -32,7 +32,7 @@ async function searchRole(q: string) {
 
   return response.value.data
 }
-
+const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<any>) {
   const originalRoleIds = originalRoles.value.map(item => item.id);
   const selectedIds = selected.value.map(item => item.id);
@@ -43,50 +43,26 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     addedRoles: addedIds
   }
   const { error } = await userService.updateUser(props.userId, data);
-  addToast(error.value, 'Update user role successfully', 'Failed to update user role')
+  notificationUtil.toastRes(toast, error.value, 'Update user role successfully', 'Failed to update user role')
   emit('close')
 }
 </script>
 
 <template>
-  <UForm
-    :state="state"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
-    <UFormGroup
-      label="Role"
-      name="role"
-    >
+  <UForm :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Role" name="role">
       <template #description>
         <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
       </template>
-      <USelectMenu
-        v-model="selected"
-        :loading="roleLoading"
-        :searchable="searchRole"
-        placeholder="Search for a roles..."
-        class="space-y-2 space-x-4"
-        option-attribute="name"
-        multiple
-        trailing
-        by="id"
-      >
+      <USelectMenu v-model="selected" :loading="roleLoading" :searchable="searchRole"
+        placeholder="Search for a roles..." class="space-y-2 space-x-4" option-attribute="name" multiple trailing
+        by="id">
       </USelectMenu>
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton
-        label="Cancel"
-        color="gray"
-        variant="ghost"
-        @click="emit('close')"
-      />
-      <UButton
-        type="submit"
-        label="Save"
-        color="black"
-      />
+      <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" label="Save" color="black" />
     </div>
   </UForm>
 </template>

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import RoleForm from '~/components/roles/RoleForm.vue';
-import roleService, { type FilterRoleResponse } from '~/services/role.service'
+import roleService from '~/services/role.service'
 import type { Role } from '~/types';
 
 definePageMeta({
@@ -47,6 +47,7 @@ const defaultColumns = [{
 }]
 
 const modal = useModal()
+const toast = useToast()
 
 function openSetAsDefaultModal(row: Role) {
     modal.open(ConfirmationModal, {
@@ -54,7 +55,7 @@ function openSetAsDefaultModal(row: Role) {
         message: row.isDefault ? 'Do you want to remove this role from default role?' : 'Do you want to set this role as default?',
         async onConfirm() {
             const { error } = await roleService.updateById(row.id, { isDefault: !row.isDefault })
-            addToast(error.value, 'Update role successfully', 'Failed to update role')
+            notificationUtil.toastRes(toast, error.value, 'Update role successfully', 'Failed to update role')
             await filterRoles()
             modal.close()
         },
@@ -70,7 +71,7 @@ function openDisableRoleModal(row: Role) {
         message: row.isEnable ? 'Do you want to disable this role?' : 'Do you want to enable this role?',
         async onConfirm() {
             const { error } = await roleService.updateById(row.id, { isEnable: !row.isEnable })
-            addToast(error.value, 'Update role successfully', 'Failed to update role')
+            notificationUtil.toastRes(toast, error.value, 'Update role successfully', 'Failed to update role')
             await filterRoles()
             modal.close()
         },
@@ -79,7 +80,6 @@ function openDisableRoleModal(row: Role) {
         }
     })
 }
-
 function openDeleteRoleModal(row: Role) {
     modal.open(ConfirmationModal, {
         title: 'Update role',
@@ -89,7 +89,7 @@ function openDeleteRoleModal(row: Role) {
         },
         async onConfirm() {
             const { error } = await roleService.deleteById(row.id)
-            addToast(error.value, 'Delete role successfully', 'Failed to delete role')
+            notificationUtil.toastRes(toast, error.value, 'Delete role successfully', 'Failed to delete role')
             await filterRoles()
             modal.close()
         }

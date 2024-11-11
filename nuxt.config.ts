@@ -8,7 +8,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/fonts',
     '@vueuse/nuxt',
-    '@sidebase/nuxt-auth',
+    '@sidebase/nuxt-auth'
   ],
 
   ssr: false,
@@ -19,7 +19,7 @@ export default defineNuxtConfig({
 
   ui: {
     icons: ['heroicons', 'simple-icons'],
-    safelistColors: ['primary', 'red', 'orange', 'green']
+    safelistColors: ['primary', 'red', 'orange', 'green'],
   },
 
   devtools: {
@@ -66,7 +66,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    baseURL: 'https://extended-tallulah-gmky-2cca56a1.koyeb.app'
+    baseURL: 'http://localhost:8080'
   },
 
   compatibilityDate: '2024-09-19',

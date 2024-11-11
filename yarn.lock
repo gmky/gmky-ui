@@ -1520,9 +1520,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gmky/ui-pro@file:./libs/ui-pro::locator=nuxt-ui-pro-template-dashboard%40workspace%3A.":
+"@gmky/ui-pro@file:./libs/ui-pro::locator=gmky-ui%40workspace%3A.":
   version: 1.5.0
-  resolution: "@gmky/ui-pro@file:./libs/ui-pro#./libs/ui-pro::hash=5e1299&locator=nuxt-ui-pro-template-dashboard%40workspace%3A."
+  resolution: "@gmky/ui-pro@file:./libs/ui-pro#./libs/ui-pro::hash=6b494e&locator=gmky-ui%40workspace%3A."
   dependencies:
     "@iconify-json/vscode-icons": "npm:^1.2.2"
     "@nuxt/ui": "npm:^2.19.2"
@@ -1535,7 +1535,7 @@ __metadata:
     pkg-types: "npm:^1.2.1"
     tailwind-merge: "npm:^2.5.4"
     vue3-smooth-dnd: "npm:^0.0.6"
-  checksum: 10c0/567f5af6b605f1507c0d4755824313c23ec592bebd453f65acd0b17bc6206c29aa6c75326fe903adbc9a188263e4a9e30ef8398023711abcd056750697aec7ff
+  checksum: 10c0/af0ef64fbfbb7402b8a4fa818f354668fdebb9354c4c7cf60ed79a7b5746fc526478b61b8883ed41ba8291bc61c24a9f418d53c6af1a461d7ccab42fa495e4b5
   languageName: node
   linkType: hard
 
@@ -8205,6 +8205,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"gmky-ui@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "gmky-ui@workspace:."
+  dependencies:
+    "@gmky/ui-pro": ./libs/ui-pro
+    "@iconify-json/heroicons": "npm:^1.1.21"
+    "@iconify-json/simple-icons": "npm:^1.1.101"
+    "@nuxt/eslint": "npm:^0.3.10"
+    "@nuxt/fonts": "npm:^0.7.0"
+    "@pinia/nuxt": "npm:^0.7.0"
+    "@sidebase/nuxt-auth": "npm:^0.8.0"
+    "@unovis/ts": "npm:^1.4.0"
+    "@unovis/vue": "npm:^1.4.0"
+    "@vueuse/nuxt": "npm:^10.9.0"
+    date-fns: "npm:^3.6.0"
+    eslint: "npm:^9.2.0"
+    nuxt: "npm:^3.11.2"
+    ufo: "npm:^1.5.4"
+    v-calendar: "npm:^3.1.2"
+    vue-tsc: "npm:^2.0.16"
+  languageName: unknown
+  linkType: soft
+
 "graceful-fs@npm:^4.1.6, graceful-fs@npm:^4.2.0, graceful-fs@npm:^4.2.4, graceful-fs@npm:^4.2.6, graceful-fs@npm:^4.2.9":
   version: 4.2.11
   resolution: "graceful-fs@npm:4.2.11"
@@ -10328,29 +10351,6 @@ __metadata:
   checksum: 10c0/60a2760fd86af869342880ff85d07020386e806f8310087a0ae6ba1550be06560ab527774b18e0e5d9a3da52e2cd2345c51e996bb164a9f7b6fb2cdc4727e3f3
   languageName: node
   linkType: hard
-
-"nuxt-ui-pro-template-dashboard@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "nuxt-ui-pro-template-dashboard@workspace:."
-  dependencies:
-    "@gmky/ui-pro": ./libs/ui-pro
-    "@iconify-json/heroicons": "npm:^1.1.21"
-    "@iconify-json/simple-icons": "npm:^1.1.101"
-    "@nuxt/eslint": "npm:^0.3.10"
-    "@nuxt/fonts": "npm:^0.7.0"
-    "@pinia/nuxt": "npm:^0.7.0"
-    "@sidebase/nuxt-auth": "npm:^0.8.0"
-    "@unovis/ts": "npm:^1.4.0"
-    "@unovis/vue": "npm:^1.4.0"
-    "@vueuse/nuxt": "npm:^10.9.0"
-    date-fns: "npm:^3.6.0"
-    eslint: "npm:^9.2.0"
-    nuxt: "npm:^3.11.2"
-    ufo: "npm:^1.5.4"
-    v-calendar: "npm:^3.1.2"
-    vue-tsc: "npm:^2.0.16"
-  languageName: unknown
-  linkType: soft
 
 "nuxt@npm:^3.11.2":
   version: 3.14.159

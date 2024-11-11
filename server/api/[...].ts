@@ -13,12 +13,5 @@ export default defineEventHandler(async (event) => {
 
     if (!token) return proxyRequest(event, target);
 
-    const response = await proxyRequest(event, target, { headers: { Authorization: `Bearer ${token}`}})
-
-    if (response.status == '401') {
-        window.location.href = '/admin/login'
-        return;
-    }
-
-    return response;
+    return proxyRequest(event, target, { headers: { Authorization: `Bearer ${token}` } })
 })

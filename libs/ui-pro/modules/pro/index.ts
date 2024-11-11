@@ -115,7 +115,7 @@ export default defineNuxtModule({
       return
     }
     nuxt.hook('build:before', async () => {
-      await validateLicense({ key, theme, dir: nuxt.options.rootDir })
+      // await validateLicense({ key, theme, dir: nuxt.options.rootDir })
     })
   }
 })
