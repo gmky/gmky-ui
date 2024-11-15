@@ -6,6 +6,8 @@ import type { Permission } from '~/types';
 
 const emit = defineEmits(['close'])
 
+const toast = useToast()
+
 const state = reactive({
   name: 'ViewPermissionOnly',
   description: 'This permission set only contains permission to view list permissions',
@@ -23,7 +25,7 @@ const validate = (state: any): FormError[] => {
 async function onSubmit(event: FormSubmitEvent<any>) {
   state.permissionIds = selected.value.map(item => item.id)
   const { error } = await psService.createPermissionSet(state);
-  addToast(error.value, 'Create new permission set successfully', 'Failed to create new permission set')
+  notificationUtil.toastRes(toast, error.value, 'Create new permission set successfully', 'Failed to create new permission set')
   emit('close')
 }
 

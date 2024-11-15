@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import UpdateUserRoleForm from '~/components/users/UpdateUserRoleForm.vue';
 import userService from '~/services/user.service';
@@ -11,27 +12,30 @@ definePageMeta({
   authority: 'user:view'
 })
 
+const { t } = useI18n()
+
 const defaultColumns = [{
   key: 'id',
   label: '#'
 }, {
   key: 'username',
-  label: 'Username',
+  label: t('user_table_username'),
   sortable: true
 }, {
   key: 'fullName',
-  label: 'Full name',
+  label: t('user_table_full_name'),
   sortable: true
 }, {
   key: 'email',
-  label: 'Email',
+  label: t('user_table_email'),
   sortable: true
 }, {
   key: 'status',
-  label: 'Status',
+  label: t('user_table_status'),
   sortable: true
 }, {
-  key: 'actions'
+  key: 'actions',
+  label: t('user_table_action')
 }]
 
 const q = ref('')
@@ -119,7 +123,7 @@ const selectedUserId = ref('');
 const items = (row: User) => [
   [
     {
-      label: 'Edit role',
+      label: t('user_table_action_edit'),
       icon: 'i-heroicons-pencil-square-20-solid',
       click: async () => {
         isUpdateRoleModelOpen.value = true
@@ -127,7 +131,7 @@ const items = (row: User) => [
       }
     },
     {
-      label: row.status === 'ACTIVE' ? 'Lock' : 'Unlock',
+      label: row.status === 'ACTIVE' ? t('user_table_action_lock') : t('user_table_action_unlock'),
       icon: 'i-heroicons-lock-closed',
       click: async () => {
         openLockUserModal(row)
@@ -136,7 +140,7 @@ const items = (row: User) => [
   ],
   [
     {
-      label: 'Logout',
+      label: t('user_table_action_logout'),
       icon: 'i-heroicons-arrow-left-end-on-rectangle',
       click: () => {
         openLogoutConfirmationModal(row)
@@ -157,24 +161,24 @@ defineShortcuts({
 <template>
   <UDashboardPage>
     <UDashboardPanel grow>
-      <UDashboardNavbar title="Users" :badge="totalItems">
+      <UDashboardNavbar :title="$t('user_title')" :badge="totalItems">
         <template #right>
-          <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off" placeholder="Filter users..."
-            class="hidden lg:block" @keydown.esc="$event.target.blur()">
+          <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
+            :placeholder="$t('user_filter_placeholder')" class="hidden lg:block" @keydown.esc="$event.target.blur()">
             <template #trailing>
               <UKbd value="/" />
             </template>
           </UInput>
 
-          <UButton label="New user" trailing-icon="i-heroicons-plus" color="gray" @click="isNewUserModalOpen = true"
-            v-if="canCreateUser" />
+          <UButton :label="$t('user_new_user_btn')" trailing-icon="i-heroicons-plus" color="gray"
+            @click="isNewUserModalOpen = true" v-if="canCreateUser" />
         </template>
       </UDashboardNavbar>
 
       <UDashboardToolbar>
         <template #left>
-          <USelectMenu v-model="selectedStatuses" icon="i-heroicons-check-circle" placeholder="No status" multiple
-            :options="defaultStatuses" :ui-menu="{ option: { base: 'capitalize' } }" />
+          <USelectMenu v-model="selectedStatuses" icon="i-heroicons-check-circle" :placeholder="$t('user_status_all')"
+            multiple :options="defaultStatuses" :ui-menu="{ option: { base: 'capitalize' } }" />
         </template>
 
         <template #right>
@@ -184,20 +188,20 @@ defineShortcuts({
           <USelectMenu v-model="selectedColumns" icon="i-heroicons-adjustments-horizontal-solid"
             :options="selectColumnOptions" multiple class="hidden lg:block">
             <template #label>
-              Display
+              {{ $t('common_table_display') }}
             </template>
           </USelectMenu>
         </template>
       </UDashboardToolbar>
 
-      <UDashboardModal v-model="isNewUserModalOpen" title="New user" description="Add a new user to your database"
-        v-if="canCreateUser" :ui="{ width: 'sm:max-w-md' }">
+      <UDashboardModal v-model="isNewUserModalOpen" :title="t('user_new_user_modal_title')"
+        :description="t('user_new_user_modal_desc')" v-if="canCreateUser" :ui="{ width: 'sm:max-w-md' }">
         <!-- ~/components/users/UsersForm.vue -->
         <UsersForm @close="isNewUserModalOpen = false" />
       </UDashboardModal>
 
-      <UDashboardModal v-model="isUpdateRoleModelOpen" title="Update role" description="Update role of user"
-        v-if="canCreateUser" :ui="{ width: 'sm:max-w-md' }">
+      <UDashboardModal v-model="isUpdateRoleModelOpen" :title="t('user_edit_modal_title')"
+        :description="t('user_edit_modal_desc')" v-if="canCreateUser" :ui="{ width: 'sm:max-w-md' }">
         <UpdateUserRoleForm @close="closeUpdateRoleModel" :user-id="selectedUserId" />
       </UDashboardModal>
 
