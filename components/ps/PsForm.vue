@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormError, FormSubmitEvent } from '#ui/types'
+import { useI18n } from 'vue-i18n';
 import permissionService from '~/services/permission.service';
 import psService from '~/services/ps.service';
 import type { Permission } from '~/types';
@@ -8,9 +9,11 @@ const emit = defineEmits(['close'])
 
 const toast = useToast()
 
+const { t } = useI18n()
+
 const state = reactive({
-  name: 'ViewPermissionOnly',
-  description: 'This permission set only contains permission to view list permissions',
+  name: undefined,
+  description: undefined,
   permissionIds: []
 })
 
@@ -25,7 +28,7 @@ const validate = (state: any): FormError[] => {
 async function onSubmit(event: FormSubmitEvent<any>) {
   state.permissionIds = selected.value.map(item => item.id)
   const { error } = await psService.createPermissionSet(state);
-  notificationUtil.toastRes(toast, error.value, 'Create new permission set successfully', 'Failed to create new permission set')
+  notificationUtil.toastRes(toast, error.value, t('ps_create_success'), t('ps_create_failed'))
   emit('close')
 }
 
@@ -44,52 +47,22 @@ async function searchPermission(q: string) {
 </script>
 
 <template>
-  <UForm
-    :validate="validate"
-    :validate-on="['submit', 'input']"
-    :state="state"
-    class="space-y-4"
-    @submit="onSubmit"
-  >
-    <UFormGroup
-      label="Name"
-      name="name"
-    >
-      <UInput
-        v-model="state.name"
-        type="text"
-        placeholder="Permission set name"
-      />
+  <UForm :validate="validate" :validate-on="['submit', 'input']" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup :label="$t('ps_create_form_name')" name="name">
+      <UInput v-model="state.name" type="text" :placeholder="$t('ps_create_form_name_ph')" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Description"
-      name="description"
-    >
-      <UInput
-        v-model="state.description"
-        type="text"
-        placeholder="Enter permission set description"
-      />
+    <UFormGroup :label="$t('ps_create_form_desc')" name="description">
+      <UInput v-model="state.description" type="text" :placeholder="$t('ps_create_form_desc_ph')" />
     </UFormGroup>
 
-    <UFormGroup
-      label="Permission"
-      name="permission"
-    >
+    <UFormGroup :label="$t('ps_create_form_permission')" name="permission">
       <template #description>
-        <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.resourceCode }} - {{ item.permissionCode }}</UBadge>
+        <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.resourceCode }} - {{
+          item.permissionCode }}</UBadge>
       </template>
-      <USelectMenu
-        v-model="selected"
-        :loading="permissionLoading"
-        :searchable="searchPermission"
-        placeholder="Search for a privilege..."
-        class="space-y-2 space-x-4"
-        multiple
-        trailing
-        by="id"
-      >
+      <USelectMenu v-model="selected" :loading="permissionLoading" :searchable="searchPermission"
+        :placeholder="$t('ps_create_form_permission_ph')" class="space-y-2 space-x-4" multiple trailing by="id">
         <template #option="{ option: permission }">
           <span class="truncate">{{ permission.resourceCode }} - {{ permission.permissionCode }}</span>
         </template>
@@ -97,17 +70,8 @@ async function searchPermission(q: string) {
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton
-        label="Cancel"
-        color="gray"
-        variant="ghost"
-        @click="emit('close')"
-      />
-      <UButton
-        type="submit"
-        label="Save"
-        color="black"
-      />
+      <UButton :label="$t('common_form_cancel')" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" :label="$t('common_form_save')" color="black" />
     </div>
   </UForm>
 </template>

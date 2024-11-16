@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
+import { useI18n } from 'vue-i18n';
 import roleService from '~/services/role.service';
 import userService from '~/services/user.service';
 import type { Role } from '~/types';
@@ -32,6 +33,7 @@ async function searchRole(q: string) {
 
   return response.value.data
 }
+const { t } = useI18n()
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<any>) {
   const originalRoleIds = originalRoles.value.map(item => item.id);
@@ -43,26 +45,26 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     addedRoles: addedIds
   }
   const { error } = await userService.updateUser(props.userId, data);
-  notificationUtil.toastRes(toast, error.value, 'Update user role successfully', 'Failed to update user role')
+  notificationUtil.toastRes(toast, error.value, t('user_update_success_msg'), t('user_date_failed_msg'))
   emit('close')
 }
 </script>
 
 <template>
   <UForm :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Role" name="role">
+    <UFormGroup :label="$t('role_title')" name="role">
       <template #description>
         <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.name }}</UBadge>
       </template>
       <USelectMenu v-model="selected" :loading="roleLoading" :searchable="searchRole"
-        placeholder="Search for a roles..." class="space-y-2 space-x-4" option-attribute="name" multiple trailing
-        by="id">
+        :placeholder="$t('user_create_form_role_search_placeholder_label')" class="space-y-2 space-x-4"
+        option-attribute="name" multiple trailing by="id">
       </USelectMenu>
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" />
+      <UButton :label="$t('common_form_cancel')" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" :label="$t('common_form_save')" color="black" />
     </div>
   </UForm>
 </template>

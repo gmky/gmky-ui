@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import UpdatePsPermission from '~/components/ps/UpdatePsPermission.vue';
 import psService from '~/services/ps.service';
@@ -20,6 +21,8 @@ const selectedPSTypes = ref([...defaultPSTypes])
 
 const router = useRoute()
 
+const { t } = useI18n()
+
 const itemPerPages = ref(+router.query.page || 10)
 const currentPage = ref(+router.query.size || 1)
 
@@ -28,15 +31,15 @@ const defaultColumns = [{
     label: '#'
 }, {
     key: 'name',
-    label: 'Name',
+    label: t('ps_table_name'),
     sortable: true
 }, {
     key: 'description',
-    label: 'Description',
+    label: t('ps_table_desc'),
     sortable: true
 }, {
     key: 'type',
-    label: 'Type',
+    label: t('ps_table_type'),
     sortable: true
 }, {
     key: 'actions'
@@ -46,8 +49,8 @@ const modal = useModal()
 
 function openDeleteRoleModal(row: PermissionSet) {
     modal.open(ConfirmationModal, {
-        title: 'Delete permission set',
-        message: 'Do you want to delete this permission set?',
+        title: t('ps_delete_modal_title'),
+        message: t('ps_delete_modal_msg'),
         async onClose() {
             modal.close()
         },
@@ -62,14 +65,14 @@ const selectedPsId = ref(null);
 
 const actions = (row: PermissionSet) => [
     [{
-        label: 'Edit permission',
+        label: t('common_table_edit'),
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => {
             isUpdatePsModalOpen.value = true
             selectedPsId.value = row.id
         }
     }], [{
-        label: 'Delete',
+        label: t('common_table_delete'),
         icon: 'i-heroicons-trash',
         click: () => {
             openDeleteRoleModal(row)
@@ -102,29 +105,29 @@ const canUpdatePS = await useAuthorize('permissionset:edit')
 <template>
     <UDashboardPage>
         <UDashboardPanel grow>
-            <UDashboardNavbar title="Permission Set" :badge="totalItems">
+            <UDashboardNavbar :title="$t('ps_title')" :badge="totalItems">
                 <template #right>
-                    <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
+                    <!-- <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
                         placeholder="Filter permission set..." class="hidden lg:block"
                         @keydown.esc="$event.target.blur()">
                         <template #trailing>
                             <UKbd value="/" />
                         </template>
-                    </UInput>
+</UInput> -->
 
-                    <UButton label="New permission set" trailing-icon="i-heroicons-plus" color="gray" v-if="canCreatePS"
-                        @click="isNewPSModalOpen = true" />
+                    <UButton :label="$t('ps_create_btn')" trailing-icon="i-heroicons-plus" color="gray"
+                        v-if="canCreatePS" @click="isNewPSModalOpen = true" />
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardModal v-model="isNewPSModalOpen" title="New user" description="Add a new user to your database"
-                v-if="canCreatePS" :ui="{ width: 'sm:max-w-md' }">
+            <UDashboardModal v-model="isNewPSModalOpen" :title="$t('ps_create_modal_title')"
+                :description="$t('ps_create_modal_desc')" v-if="canCreatePS" :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <PsForm @close="isNewPSModalOpen = false" />
             </UDashboardModal>
 
-            <UDashboardModal v-model="isUpdatePsModalOpen" title="Update permission set"
-                description="Assign/Unassign permission" v-if="canUpdatePS" :ui="{ width: 'sm:max-w-md' }">
+            <UDashboardModal v-model="isUpdatePsModalOpen" :title="$t('ps_update_modal_title')"
+                :description="$t('ps_update_modal_desc')" v-if="canUpdatePS" :ui="{ width: 'sm:max-w-md' }">
                 <UpdatePsPermission @close="isUpdatePsModalOpen = false" :ps-id="selectedPsId" />
             </UDashboardModal>
 
@@ -141,7 +144,7 @@ const canUpdatePS = await useAuthorize('permissionset:edit')
                     <USelectMenu v-model="selectedColumns" icon="i-heroicons-adjustments-horizontal-solid"
                         :options="selectedColumnOpts" multiple class="hidden lg:block">
                         <template #label>
-                            Display
+                            {{ $t('common_table_display') }}
                         </template>
                     </USelectMenu>
                 </template>

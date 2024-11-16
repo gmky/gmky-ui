@@ -163,12 +163,12 @@ defineShortcuts({
     <UDashboardPanel grow>
       <UDashboardNavbar :title="$t('user_title')" :badge="totalItems">
         <template #right>
-          <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
+          <!-- <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
             :placeholder="$t('user_filter_placeholder')" class="hidden lg:block" @keydown.esc="$event.target.blur()">
             <template #trailing>
               <UKbd value="/" />
             </template>
-          </UInput>
+</UInput> -->
 
           <UButton :label="$t('user_new_user_btn')" trailing-icon="i-heroicons-plus" color="gray"
             @click="isNewUserModalOpen = true" v-if="canCreateUser" />

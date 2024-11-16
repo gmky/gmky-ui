@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 import permissionService from '~/services/permission.service';
 
 definePageMeta({
@@ -10,6 +11,7 @@ definePageMeta({
 
 const q = ref('')
 const isNewPermissionModalOpen = ref(false)
+const { t } = useI18n()
 
 const itemPerPages = ref(10)
 const currentPage = ref(1)
@@ -21,15 +23,15 @@ const defaultColumns = [{
     label: '#'
 }, {
     key: 'resourceCode',
-    label: 'Resource',
+    label: t('permission_table_resource_code'),
     sortable: true
 }, {
     key: 'permissionCode',
-    label: 'Permission',
+    label: t('permission_table_permission_code'),
     sortable: true
 }, {
     key: 'description',
-    label: 'Description',
+    label: t('permission_table_desc'),
     sortable: true
 }, {
     key: 'actions'
@@ -50,22 +52,22 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
 <template>
     <UDashboardPage>
         <UDashboardPanel grow>
-            <UDashboardNavbar title="Permission" :badge="totalItems">
+            <UDashboardNavbar :title="$t('permission_title')" :badge="totalItems">
                 <template #right>
-                    <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
+                    <!-- <UInput ref="input" v-model="q" icon="i-heroicons-funnel" autocomplete="off"
                         placeholder="Filter permission..." class="hidden lg:block" @keydown.esc="$event.target.blur()">
                         <template #trailing>
                             <UKbd value="/" />
                         </template>
-                    </UInput>
+</UInput> -->
                 </template>
             </UDashboardNavbar>
             <UDashboardToolbar>
                 <template #left>
                     <UInput icon="i-heroicons-magnifying-glass-20-solid" size="sm" color="white" :trailing="false"
-                        placeholder="Search resource..." v-model="resourceCode" />
+                        :placeholder="$t('permission_table_search_resource')" v-model="resourceCode" />
                     <UInput icon="i-heroicons-magnifying-glass-20-solid" size="sm" color="white" :trailing="false"
-                        placeholder="Search permission..." v-model="permissionCode" />
+                        :placeholder="$t('permission_table_search_permission')" v-model="permissionCode" />
                 </template>
 
                 <template #right>
@@ -74,7 +76,7 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
                     <USelectMenu v-model="selectedColumns" icon="i-heroicons-adjustments-horizontal-solid"
                         :options="selectedColumnOpts" multiple class="hidden lg:block">
                         <template #label>
-                            Display
+                            {{ $t('common_table_display') }}
                         </template>
                     </USelectMenu>
                 </template>

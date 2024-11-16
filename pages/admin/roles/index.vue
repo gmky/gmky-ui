@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { useI18n } from 'vue-i18n';
 import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import RoleForm from '~/components/roles/RoleForm.vue';
 import roleService from '~/services/role.service'
@@ -19,28 +20,30 @@ const selectedRoleTypes = ref([...defaultRoleTypes])
 const defaultStatuses = ['ACTIVE', 'IN_ACTIVE']
 const selectedStatuses = ref([...defaultStatuses])
 
+const { t } = useI18n()
+
 const defaultColumns = [{
     key: 'id',
     label: '#'
 }, {
     key: 'name',
-    label: 'Name',
+    label: t('role_table_name'),
     sortable: true
 }, {
     key: 'description',
-    label: 'Description',
+    label: t('role_table_desc'),
     sortable: true
 }, {
     key: 'type',
-    label: 'Type',
+    label: t('role_table_type'),
     sortable: true
 }, {
     key: 'isDefault',
-    label: 'Default',
+    label: t('role_table_default'),
     sortable: true
 }, {
     key: 'isEnable',
-    label: 'Status',
+    label: t('common_table_status'),
     sortable: true
 }, {
     key: 'actions'
@@ -51,11 +54,11 @@ const toast = useToast()
 
 function openSetAsDefaultModal(row: Role) {
     modal.open(ConfirmationModal, {
-        title: 'Update role',
-        message: row.isDefault ? 'Do you want to remove this role from default role?' : 'Do you want to set this role as default?',
+        title: t('role_table_update_modal_title'),
+        message: row.isDefault ? t('role_table_unset_default_msg') : t('role_table_set_default_msg'),
         async onConfirm() {
             const { error } = await roleService.updateById(row.id, { isDefault: !row.isDefault })
-            notificationUtil.toastRes(toast, error.value, 'Update role successfully', 'Failed to update role')
+            notificationUtil.toastRes(toast, error.value, t('role_update_success'), t('role_update_failed'))
             await filterRoles()
             modal.close()
         },
@@ -67,11 +70,11 @@ function openSetAsDefaultModal(row: Role) {
 
 function openDisableRoleModal(row: Role) {
     modal.open(ConfirmationModal, {
-        title: 'Update role',
-        message: row.isEnable ? 'Do you want to disable this role?' : 'Do you want to enable this role?',
+        title: t('role_table_update_modal_title'),
+        message: row.isEnable ? t('role_table_disable_msg') : t('role_table_enable_msg'),
         async onConfirm() {
             const { error } = await roleService.updateById(row.id, { isEnable: !row.isEnable })
-            notificationUtil.toastRes(toast, error.value, 'Update role successfully', 'Failed to update role')
+            notificationUtil.toastRes(toast, error.value, t('role_update_success'), t('role_update_failed'))
             await filterRoles()
             modal.close()
         },
@@ -82,14 +85,14 @@ function openDisableRoleModal(row: Role) {
 }
 function openDeleteRoleModal(row: Role) {
     modal.open(ConfirmationModal, {
-        title: 'Update role',
-        message: 'Do you want to delete this role?',
+        title: t('role_table_update_modal_title'),
+        message: t('role_table_delete_msg'),
         async onClose() {
             modal.close()
         },
         async onConfirm() {
             const { error } = await roleService.deleteById(row.id)
-            notificationUtil.toastRes(toast, error.value, 'Delete role successfully', 'Failed to delete role')
+            notificationUtil.toastRes(toast, error.value, t('role_update_success'), t('role_update_failed'))
             await filterRoles()
             modal.close()
         }
@@ -98,23 +101,23 @@ function openDeleteRoleModal(row: Role) {
 
 const actions = (row: Role) => [
     [{
-        label: 'Edit permission set',
+        label: t('common_table_edit'),
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => console.log('Edit', row.id)
     }, {
-        label: row.isDefault ? 'Remove as default' : 'Set as default',
+        label: row.isDefault ? t('role_table_action_unset_default_btn') : t('role_table_action_set_default_btn'),
         icon: 'i-heroicons-exclamation-triangle',
         click: () => {
             openSetAsDefaultModal(row)
         }
     }, {
-        label: row.isEnable ? 'Disable' : 'Enable',
+        label: row.isEnable ? t('role_table_action_disable_btn') : t('role_table_action_enable_btn'),
         icon: 'i-heroicons-adjustments-vertical',
         click: () => {
             openDisableRoleModal(row)
         }
     }], [{
-        label: 'Delete',
+        label: t('common_table_delete'),
         icon: 'i-heroicons-trash',
         click: () => {
             openDeleteRoleModal(row)
@@ -151,22 +154,23 @@ const canCreateRole = await useAuthorize('role:create')
 <template>
     <UDashboardPage>
         <UDashboardPanel grow>
-            <UDashboardNavbar title="Roles" :badge="totalItems">
+            <UDashboardNavbar :title="$t('role_title')" :badge="totalItems">
                 <template #right>
-                    <UInput v-model="q" icon="i-heroicons-funnel" autocomplete="off" placeholder="Filter roles..."
-                        class="hidden lg:block" @keydown.esc="$event.target.blur()">
+                    <!-- <UInput v-model="q" icon="i-heroicons-funnel" autocomplete="off"
+                        :placeholder="$t('role_filter_placeholder')" class="hidden lg:block"
+                        @keydown.esc="$event.target.blur()">
                         <template #trailing>
                             <UKbd value="/" />
                         </template>
-                    </UInput>
+</UInput> -->
 
-                    <UButton label="New role" trailing-icon="i-heroicons-plus" color="gray" v-if="canCreateRole"
-                        @click="isNewRoleModalOpen = true" />
+                    <UButton :label="$t('role_create_btn')" trailing-icon="i-heroicons-plus" color="gray"
+                        v-if="canCreateRole" @click="isNewRoleModalOpen = true" />
                 </template>
             </UDashboardNavbar>
 
-            <UDashboardModal v-model="isNewRoleModalOpen" title="New user" description="Add a new user to your database"
-                v-if="canCreateRole" :ui="{ width: 'sm:max-w-md' }">
+            <UDashboardModal v-model="isNewRoleModalOpen" :title="t('role_create_modal_title')"
+                :description="$t('role_create_modal_desc')" v-if="canCreateRole" :ui="{ width: 'sm:max-w-md' }">
                 <!-- ~/components/users/UsersForm.vue -->
                 <RoleForm @close="isNewRoleModalOpen = false" />
             </UDashboardModal>
@@ -186,7 +190,7 @@ const canCreateRole = await useAuthorize('role:create')
                     <USelectMenu v-model="selectedColumns" icon="i-heroicons-adjustments-horizontal-solid"
                         :options="selectedColumnOpts" multiple class="hidden lg:block">
                         <template #label>
-                            Display
+                            {{ $t('common_table_display') }}
                         </template>
                     </USelectMenu>
                 </template>

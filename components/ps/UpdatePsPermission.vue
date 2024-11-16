@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '#ui/types'
+import { useI18n } from 'vue-i18n';
 import permissionService from '~/services/permission.service';
 import psService from '~/services/ps.service';
 import type { Permission } from '~/types';
@@ -34,6 +35,7 @@ async function searchPermission(q: string) {
 }
 
 const toast = useToast()
+const { t } = useI18n()
 
 async function onSubmit(event: FormSubmitEvent<any>) {
   const originalPermissionIds = originalPermissions.value.map(item => item.id);
@@ -45,21 +47,21 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     addedPermission: addedIds
   }
   const { error } = await psService.updatePs(props.psId, data);
-  notificationUtil.toastRes(toast, error.value, 'Update permission set successfully', 'Failed to update permission set')
+  notificationUtil.toastRes(toast, error.value, t('ps_update_success'), t('ps_update_failed'))
   emit('close')
 }
 </script>
 
 <template>
   <UForm :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Permission Set" name="permission-set">
+    <UFormGroup :label="$t('ps_update_form_permission_label')" name="permission-set">
       <template #description>
         <UBadge class="mx-1 my-1" v-for="item in selected" color="white" variant="solid">{{ item.resourceCode }} - {{
           item.permissionCode }}</UBadge>
       </template>
       <USelectMenu v-model="selected" :loading="permissionLoading" :searchable="searchPermission"
-        placeholder="Search for a permission..." class="space-y-2 space-x-4" option-attribute="name" multiple trailing
-        by="id">
+        :placeholder="$t('ps_update_form_search_permission_ph')" class="space-y-2 space-x-4" option-attribute="name"
+        multiple trailing by="id">
         <template #option="{ option: permission }">
           <span class="truncate">{{ permission.resourceCode }} - {{ permission.permissionCode }}</span>
         </template>
@@ -67,8 +69,8 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <div class="flex justify-end gap-3">
-      <UButton label="Cancel" color="gray" variant="ghost" @click="emit('close')" />
-      <UButton type="submit" label="Save" color="black" />
+      <UButton :label="$t('common_form_cancel')" color="gray" variant="ghost" @click="emit('close')" />
+      <UButton type="submit" :label="$t('common_form_save')" color="black" />
     </div>
   </UForm>
 </template>
