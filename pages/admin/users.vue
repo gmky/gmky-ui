@@ -31,11 +31,11 @@ const defaultColumns = [{
   sortable: true
 }, {
   key: 'status',
-  label: t('user_table_status'),
+  label: t('common_table_status'),
   sortable: true
 }, {
   key: 'actions',
-  label: t('user_table_action')
+  label: t('common_table_action')
 }]
 
 const q = ref('')
@@ -62,7 +62,7 @@ const selectedStatuses = ref([...initialStatuses.value])
 const query = computed(() => ({ statuses: selectedStatuses.value, page: page.value - 1, size: itemPerPages.value }))
 
 const { data: response, status } = await userService.filterUser(query);
-const users = computed(() => response.value.data);
+const users = computed(() => response.value.data || []);
 const totalItems = computed(() => response.value.meta.total || 0);
 
 const pending = computed(() => status.value == 'pending')
@@ -123,7 +123,7 @@ const selectedUserId = ref('');
 const items = (row: User) => [
   [
     {
-      label: t('user_table_action_edit'),
+      label: t('common_table_edit'),
       icon: 'i-heroicons-pencil-square-20-solid',
       click: async () => {
         isUpdateRoleModelOpen.value = true

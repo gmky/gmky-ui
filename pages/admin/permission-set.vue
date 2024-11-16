@@ -83,7 +83,7 @@ const sort = ref({ column: 'id', direction: 'asc' as const })
 
 const query = computed(() => ({ type: selectedPSTypes.value, page: currentPage.value - 1, size: itemPerPages.value }))
 const { data: response, status } = await psService.filterPermissionSet(query)
-const psList = computed(() => response.value.data)
+const psList = computed(() => response.value.data || [])
 const totalItems = computed(() => response.value.meta.total)
 const psListLoading = computed(() => status.value == 'pending')
 

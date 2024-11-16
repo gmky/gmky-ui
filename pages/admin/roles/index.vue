@@ -133,7 +133,7 @@ const query = computed(() => ({ type: selectedRoleTypes.value, page: currentPage
 
 const { data: response, status } = await roleService.filterRole(query);
 const rolesLoading = computed(() => status.value == 'pending')
-const roles = computed(() => response.value.data)
+const roles = computed(() => response.value.data || [])
 const totalItems = computed(() => response.value.meta.total)
 
 async function filterRoles() {

@@ -23,7 +23,7 @@ const defaultColumns = [{
     key: 'resourceCode',
     label: 'Resource',
     sortable: true
-},{
+}, {
     key: 'permissionCode',
     label: 'Permission',
     sortable: true
@@ -41,7 +41,7 @@ const sort = ref({ column: 'id', direction: 'asc' as const })
 
 const query = computed(() => ({ page: currentPage.value - 1, size: itemPerPages.value, resourceCode: resourceCode.value, permissionCode: permissionCode.value }))
 const { data: response, pending: permissionsLoading } = await permissionService.filterPermission(query)
-const permissions = computed(() => response.value.data)
+const permissions = computed(() => response.value.data || [])
 const totalItems = computed(() => response.value.meta.total || 0)
 
 // Computed
@@ -62,22 +62,10 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
             </UDashboardNavbar>
             <UDashboardToolbar>
                 <template #left>
-                    <UInput
-                        icon="i-heroicons-magnifying-glass-20-solid"
-                        size="sm"
-                        color="white"
-                        :trailing="false"
-                        placeholder="Search resource..."
-                        v-model="resourceCode"
-                    />
-                    <UInput
-                        icon="i-heroicons-magnifying-glass-20-solid"
-                        size="sm"
-                        color="white"
-                        :trailing="false"
-                        placeholder="Search permission..."
-                        v-model="permissionCode"
-                    />
+                    <UInput icon="i-heroicons-magnifying-glass-20-solid" size="sm" color="white" :trailing="false"
+                        placeholder="Search resource..." v-model="resourceCode" />
+                    <UInput icon="i-heroicons-magnifying-glass-20-solid" size="sm" color="white" :trailing="false"
+                        placeholder="Search permission..." v-model="permissionCode" />
                 </template>
 
                 <template #right>
@@ -92,8 +80,8 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
                 </template>
             </UDashboardToolbar>
 
-            <UTable v-model:sort="sort" :rows="permissions" :columns="columns" :loading="permissionsLoading" sort-mode="manual"
-                class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
+            <UTable v-model:sort="sort" :rows="permissions" :columns="columns" :loading="permissionsLoading"
+                sort-mode="manual" class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
                 <template #name-data="{ row }">
                     <div class="flex items-center gap-3">
                         <span class="text-gray-900 dark:text-white font-medium">{{ row.name }}</span>

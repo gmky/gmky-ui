@@ -28,6 +28,26 @@ export const useAuthStore = defineStore('authStore', {
       },
       authority: 'profile:view'
     }, {
+      id: 'linkages',
+      label: 'Linkages',
+      icon: 'i-heroicons-link',
+      to: '/admin/linkages',
+      tooltip: {
+        text: 'Linkages',
+        shortcuts: ['L', 'K']
+      },
+      authority: 'public'
+    }, {
+      id: 'packages',
+      label: 'Packages',
+      icon: 'i-heroicons-rectangle-stack',
+      to: '/admin/packages',
+      tooltip: {
+        text: 'Packages',
+        shortcuts: ['P', 'K']
+      },
+      authority: 'public'
+    }, {
       id: 'users',
       label: 'Users',
       icon: 'i-heroicons-users',
@@ -57,7 +77,7 @@ export const useAuthStore = defineStore('authStore', {
         shortcuts: ['PS']
       },
       authority: 'permissionset:view'
-    },{
+    }, {
       id: 'permissions',
       label: 'Permissions',
       icon: 'i-heroicons-key',
@@ -98,8 +118,8 @@ export const useAuthStore = defineStore('authStore', {
         this.loaded = true
       }
     },
-    hasAuthority(input : string) : boolean {
-      const [ resource, authority] = input.split(':');
+    hasAuthority(input: string): boolean {
+      const [resource, authority] = input.split(':');
       const result = !!this.grantedAuthorities.find(item => item.resource == resource && item.permissions.includes(authority));
       return result
     },
@@ -109,7 +129,7 @@ export const useAuthStore = defineStore('authStore', {
     }
   },
   getters: {
-    getLoaded (state) {
+    getLoaded(state) {
       return state.loaded
     },
     getLinks(state) {
@@ -118,7 +138,7 @@ export const useAuthStore = defineStore('authStore', {
         if (item.authority == 'public') {
           result.push(item)
         } else {
-          let [ resource, authority] = item.authority.split(':');
+          let [resource, authority] = item.authority.split(':');
           let tmp = !!this.grantedAuthorities.find(item => item.resource == resource && item.permissions.includes(authority))
           if (tmp) {
             result.push(item)

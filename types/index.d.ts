@@ -29,14 +29,6 @@ export interface Member {
   avatar: Avatar
 }
 
-export interface Notification {
-  id: number
-  unread?: boolean
-  sender: User
-  body: string
-  date: string
-}
-
 export type Period = 'daily' | 'weekly' | 'monthly'
 
 export interface Range {
@@ -97,4 +89,50 @@ export interface Meta {
 export interface SummaryItem {
   resource: string
   permissions: string[]
+}
+
+export interface UnreadCount {
+  count: number
+}
+
+export interface Notification {
+  id: number
+  title: string
+  message: string
+  data: any
+  read: boolean
+  translations: NotificationTranslation[]
+  createdAt: string
+  createdBy: string
+}
+
+export interface NotificationTranslation {
+  locale: string
+  title: string
+  message: string
+}
+
+export interface Linkage {
+  id: number
+  domain: string
+  username: string
+  status: string
+}
+
+export interface Package {
+  id: number
+  name: string
+  initialBalance: number
+  remainingBalance: number
+  cutLoss: number
+  cutRevenue: number
+  source: string
+  isReversed: boolean
+  isPublic: boolean
+  professionalMode: boolean
+  startAt: string
+  endAt: string
+  userId: string
+  linkageId: number
+  status: string
 }
