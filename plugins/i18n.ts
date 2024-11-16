@@ -138,7 +138,17 @@ export default defineNuxtPlugin(({ vueApp }) => {
         permission_table_permission_code: 'Mã quyền',
         permission_table_desc: 'Mô tả',
         permission_table_search_resource: 'Tìm kiếm theo tài nguyên',
-        permission_table_search_permission: 'Tìm kiếm theo quyền'
+        permission_table_search_permission: 'Tìm kiếm theo quyền',
+
+        login_form_username_label: 'Tên đăng nhập',
+        login_form_password_label: 'Mật khẩu',
+        login_form_remember_me_label: 'Ghi nhớ đăng nhập',
+        login_form_username_validation_msg: 'Vui lòng nhập tên đăng nhập',
+        login_form_password_validation_msg: 'Vui lòng nhập mật khẩu',
+        login_result_error: 'Có lỗi xảy ra trong quá trình đăng nhập',
+        login_forgot_password: 'Quên mật khẩu?',
+        login_form_msg: 'Đăng nhập với tên đăng nhập và mật khẩu',
+        login_form_title: 'Quick Invest'
       }
     }
   })
