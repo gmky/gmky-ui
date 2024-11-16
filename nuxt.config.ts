@@ -66,7 +66,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    baseURL: 'https://extended-tallulah-gmky-2cca56a1.koyeb.app'
+    baseURL: 'https://servie.opera.mcashtest.online'
   },
 
   compatibilityDate: '2024-09-19',
