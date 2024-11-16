@@ -66,7 +66,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    baseURL: 'https://servie.opera.mcashtest.online'
+    baseURL: process.env.NUXT_BASE_URL || 'http://localhost:8080'
   },
 
   compatibilityDate: '2024-09-19',
