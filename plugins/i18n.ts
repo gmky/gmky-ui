@@ -148,7 +148,20 @@ export default defineNuxtPlugin(({ vueApp }) => {
         login_result_error: 'Có lỗi xảy ra trong quá trình đăng nhập',
         login_forgot_password: 'Quên mật khẩu?',
         login_form_msg: 'Đăng nhập với tên đăng nhập và mật khẩu',
-        login_form_title: 'Quick Invest'
+        login_form_title: 'Quick Invest',
+
+        linkage_create_btn: 'Liên kết sàn',
+        linkage_create_modal_title: 'Liên kết sàn đầu tư',
+        linkage_create_modal_desc: 'Liên kết sàn đầu tư với tài khoản của bạn',
+        linkage_create_form_domain_validation: 'Vui lòng nhập địa chỉ của sàn muốn liên kết',
+        linkage_create_form_username_validation: 'Vui lòng nhập tên đăng nhập',
+        linkage_create_form_password_validation: 'Vui lòng nhập mật khẩu',
+        linkage_create_form_domain: 'Địa chỉ sàn',
+        linkage_creat_form_domain_ph: 'Nhập địa chỉ sàn',
+        linkage_create_form_username: 'Tên đăng nhập',
+        linkage_create_form_username_ph: 'Nhập tên đăng nhập',
+        linkage_create_form_password: 'Mật khẩu',
+        linkage_create_form_password_ph: 'Nhập mật khẩu'
       }
     }
   })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
+import CreateLinkageForm from '~/components/linkages/CreateLinkageForm.vue';
 import linkageService from '~/services/linkage.service';
 import type { Linkage } from '~/types';
 
@@ -70,6 +71,8 @@ const { data: response, status } = await linkageService.filterLinkages(query)
 const linkages = computed(() => response.value.data || [])
 const totalItems = computed(() => response.value.meta.total || 0)
 const linkageLoading = computed(() => status.value == 'pending')
+const canCreateLinkage = ref(true);
+const isNewLinkageModalOpen = ref(false)
 
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
@@ -77,7 +80,18 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
 <template>
     <UDashboardPage>
         <UDashboardPanel grow>
-            <UDashboardNavbar :title="$t('linkage_title')" :badge="totalItems" />
+            <UDashboardNavbar :title="$t('linkage_title')" :badge="totalItems">
+                <template #right>
+                    <UButton :label="$t('linkage_create_btn')" trailing-icon="i-heroicons-plus" color="gray"
+                        v-if="canCreateLinkage" @click="isNewLinkageModalOpen = true" />
+                </template>
+            </UDashboardNavbar>
+
+            <UDashboardModal v-model="isNewLinkageModalOpen" :title="t('linkage_create_modal_title')"
+                :description="$t('linkage_create_modal_desc')" v-if="canCreateLinkage" :ui="{ width: 'sm:max-w-md' }">
+                <CreateLinkageForm @close="isNewLinkageModalOpen = false" />
+            </UDashboardModal>
+
             <UDashboardToolbar>
                 <template #right>
                     <UPagination v-model="currentPage" :page-count="+itemPerPages" :total="totalItems" />
