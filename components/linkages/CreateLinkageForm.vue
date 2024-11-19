@@ -25,8 +25,8 @@ const validate = (state: any): FormError[] => {
 }
 
 async function onSubmit(event: FormSubmitEvent<any>) {
-  const { error } = linkageService.createLinkage(state);
-  notificationUtil.toastRes(toast, error.value, t('ps_create_success'), t('ps_create_failed'))
+  const { error } = await linkageService.createLinkage(state);
+  notificationUtil.toastRes(toast, error.value, t('linkage_create_form_link_success'), t('linkage_create_form_link_failed'))
   emit('close')
 }
 

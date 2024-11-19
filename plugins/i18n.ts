@@ -161,7 +161,9 @@ export default defineNuxtPlugin(({ vueApp }) => {
         linkage_create_form_username: 'Tên đăng nhập',
         linkage_create_form_username_ph: 'Nhập tên đăng nhập',
         linkage_create_form_password: 'Mật khẩu',
-        linkage_create_form_password_ph: 'Nhập mật khẩu'
+        linkage_create_form_password_ph: 'Nhập mật khẩu',
+        linkage_create_form_link_success: 'Liên kết sàn thành công',
+        linkage_create_form_link_failed: 'Liên kết sàn thất bại'
       }
     }
   })
