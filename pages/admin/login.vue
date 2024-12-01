@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { FormError } from '#ui/types'
 import { useI18n } from 'vue-i18n';
+import SelectLinkageForm from '~/components/SelectLinkageForm.vue';
 import { useAuthStore } from '~/stores/auth';
 
 definePageMeta({
@@ -35,8 +36,6 @@ const fields = [{
     type: 'checkbox'
 }]
 
-const runtimeConfig = useRuntimeConfig()
-
 const validate = (state: any) => {
     const errors: FormError[] = []
     if (!state.username) errors.push({ path: 'username', message: t('login_form_username_validation_msg') })
@@ -48,13 +47,16 @@ async function onSubmit(data: any) {
     try {
         const authStore = useAuthStore()
         loading.value = true
-        await signIn({ ...data }, { redirect: true, callbackUrl: '/admin', external: false })
+        await signIn({ ...data }, { redirect: false, callbackUrl: '/admin', external: false })
         await authStore.getAuthorities()
+        isSelectPackageModalOpen.value = true
     } catch (ex) {
         loading.value = false
         failedToLogin.value = true
     }
 }
+
+const isSelectPackageModalOpen = ref(false)
 </script>
 
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
@@ -62,6 +64,9 @@ async function onSubmit(data: any) {
 <template>
     <ClientOnly>
         <UContainer class="flex items-center justify-center h-screen">
+            <UModal v-model="isSelectPackageModalOpen">
+                <SelectLinkageForm />
+            </UModal>
             <UCard class="max-w-sm w-full">
                 <UAuthForm :fields="fields" :validate="validate" :title="$t('login_form_title')" align="top"
                     :loading="loading" icon="i-heroicons-lock-closed"

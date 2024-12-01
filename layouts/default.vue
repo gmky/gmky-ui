@@ -86,15 +86,17 @@ const authStore = useAuthStore()
 
 const links = computed(() => authStore.getLinks)
 
-const footerLinks = [{
-  label: 'Invite people',
-  icon: 'i-heroicons-plus',
-  to: '/admin/settings/members'
-}, {
-  label: 'Help & Support',
-  icon: 'i-heroicons-question-mark-circle',
-  click: () => isHelpSlideoverOpen.value = true
-}]
+const footerLinks = [
+  //   {
+  //   label: 'Invite people',
+  //   icon: 'i-heroicons-plus',
+  //   to: '/admin/settings/members'
+  // }, {
+  //   label: 'Help & Support',
+  //   icon: 'i-heroicons-question-mark-circle',
+  //   click: () => isHelpSlideoverOpen.value = true
+  // }
+]
 
 const groups = [{
   key: 'links',

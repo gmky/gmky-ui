@@ -16,18 +16,20 @@ export const useAuthStore = defineStore('authStore', {
         shortcuts: ['G', 'H']
       },
       authority: 'user:view'
-    }, {
-      id: 'inbox',
-      label: 'Inbox',
-      icon: 'i-heroicons-inbox',
-      to: '/admin/inbox',
-      badge: '4',
-      tooltip: {
-        text: 'Inbox',
-        shortcuts: ['G', 'I']
-      },
-      authority: 'profile:view'
-    }, {
+    },
+    // {
+    //   id: 'inbox',
+    //   label: 'Inbox',
+    //   icon: 'i-heroicons-inbox',
+    //   to: '/admin/inbox',
+    //   badge: '4',
+    //   tooltip: {
+    //     text: 'Inbox',
+    //     shortcuts: ['G', 'I']
+    //   },
+    //   authority: 'profile:view'
+    // },
+    {
       id: 'linkages',
       label: 'Linkages',
       icon: 'i-heroicons-link',
@@ -108,7 +110,8 @@ export const useAuthStore = defineStore('authStore', {
         text: 'Settings',
         shortcuts: ['G', 'S']
       }
-    }]
+    }],
+    linkageId: null
   }),
   actions: {
     async getAuthorities() {
@@ -126,6 +129,10 @@ export const useAuthStore = defineStore('authStore', {
     clear() {
       this.grantedAuthorities = []
       this.loaded = false
+    },
+    async setLinkageId(linkageId) {
+      this.linkageId = linkageId
+      localStorage.setItem("linkageId", linkageId)
     }
   },
   getters: {
@@ -146,6 +153,14 @@ export const useAuthStore = defineStore('authStore', {
         }
       })
       return result
+    },
+    getLinkageId(state) {
+      var data = state.linkageId;
+      if (!data) {
+        data = localStorage.getItem("linkageId")
+        state.linkageId = data
+      }
+      return data;
     }
   }
 })
