@@ -11,5 +11,8 @@ export default {
   },
   createLinkage(data) {
     return useFetch<Linkage>('/api/client-api/v1/linkages', { method: 'POST', body: data, server: false, default: () => null });
+  },
+  getLinkageById(linkageId) {
+    return useFetch<Linkage>(`/api/client-api/v1/linkages/${linkageId}`, { server: false, default: () => null })
   }
 }

@@ -117,22 +117,35 @@ export interface Linkage {
   domain: string
   username: string
   status: string
+  liveId: string
+  demoId: string
 }
 
-export interface Package {
+export interface Investment {
   id: number
-  name: string
-  initialBalance: number
-  remainingBalance: number
-  cutLoss: number
-  cutRevenue: number
-  source: string
-  isReversed: boolean
-  isPublic: boolean
-  professionalMode: boolean
+  botName: string
+  countWin: number
+  countLose: number
+  amountWin: number
+  amountLose: number
+  balance: number
   startAt: string
   endAt: string
   userId: string
   linkageId: number
   status: string
+}
+
+export interface BotStrategy {
+  id: number
+  botType: string
+  botNameVn: string
+  botNameEn: string
+  botMethod: string
+  botDescVn: string
+  botDescEn: string
+  botRuleStrategy: string
+  botRuleCapital: string
+  Status: string
+  sameColor: boolean
 }

@@ -16,29 +16,15 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 
 <template>
   <UModal>
-    <UForm
-      :validate-on="['submit', 'input']"
-      :state="{}"
-      class="space-y-4"
-      @submit="onSubmit"
-    >
+    <UForm :validate-on="['submit', 'input']" :state="{}" class="space-y-4" @submit="onSubmit">
       <UCard>
         <div class="space-y-2">
           <p>{{ title }}</p>
           <p>{{ message }}</p>
         </div>
         <div class="flex justify-end gap-3">
-          <UButton
-            label="No"
-            color="gray"
-            variant="ghost"
-            @click="emit('close')"
-          />
-          <UButton
-            type="submit"
-            label="Yes"
-            color="black"
-          />
+          <UButton :label="$t('common_confirmation_no')" color="gray" variant="ghost" @click="emit('close')" />
+          <UButton type="submit" :label="$t('common_confirmation_yes')" color="black" />
         </div>
       </UCard>
     </UForm>

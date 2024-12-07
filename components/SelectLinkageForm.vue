@@ -16,6 +16,10 @@ async function setLinkageId(linkageId: number) {
   router.push('/admin')
 }
 
+async function createNewLinkage() {
+  router.push('/admin')
+}
+
 </script>
 
 <template>
@@ -25,5 +29,6 @@ async function setLinkageId(linkageId: number) {
       class="my-2 pb-1 hover:primary hover:cursor-pointer dark:hover:bg-gray-700/50 hover:bg-gray-100 text-gray-700 dark:text-gray-200"
       v-for="item in linkages" :title="item.username" :description="item.domain" @click="setLinkageId(item.id)">
     </UDashboardCard>
+    <UButton block @click="createNewLinkage">Create new linkage</UButton>
   </div>
 </template>

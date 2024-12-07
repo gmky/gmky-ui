@@ -40,71 +40,35 @@ export const useAuthStore = defineStore('authStore', {
       },
       authority: 'public'
     }, {
-      id: 'packages',
-      label: 'Packages',
+      id: 'investments',
+      label: 'Investments',
       icon: 'i-heroicons-rectangle-stack',
-      to: '/admin/packages',
+      to: '/admin/investments',
       tooltip: {
-        text: 'Packages',
+        text: 'Investments',
         shortcuts: ['P', 'K']
       },
       authority: 'public'
-    }, {
-      id: 'users',
-      label: 'Users',
-      icon: 'i-heroicons-users',
-      to: '/admin/users',
-      tooltip: {
-        text: 'Users',
-        shortcuts: ['G', 'U']
-      },
-      authority: 'user:view'
-    }, {
-      id: 'roles',
-      label: 'Roles',
-      icon: 'i-heroicons-user-group',
-      to: '/admin/roles',
-      tooltip: {
-        text: 'Roles',
-        shortcuts: ['R']
-      },
-      authority: 'role:view'
-    }, {
-      id: 'permissionset',
-      label: 'Permission Set',
-      icon: 'i-heroicons-adjustments-horizontal',
-      to: '/admin/permission-set',
-      tooltip: {
-        text: 'Permission Set',
-        shortcuts: ['PS']
-      },
-      authority: 'permissionset:view'
-    }, {
-      id: 'permissions',
-      label: 'Permissions',
-      icon: 'i-heroicons-key',
-      to: '/admin/permissions',
-      tooltip: {
-        text: 'Permissions',
-        shortcuts: ['P']
-      },
-      authority: 'permission:view'
-    }, {
-      id: 'settings',
-      label: 'Settings',
+    },
+    {
+      id: 'administrator',
+      label: 'Administrator',
       to: '/admin/settings',
       icon: 'i-heroicons-cog-8-tooth',
       authority: 'public',
       children: [{
-        label: 'General',
-        to: '/admin/settings',
+        label: 'Users',
+        to: '/admin/users',
         exact: true
       }, {
-        label: 'Members',
-        to: '/admin/settings/members'
+        label: 'Roles',
+        to: '/admin/roles'
       }, {
-        label: 'Notifications',
-        to: '/admin/settings/notifications'
+        label: 'Permission Set',
+        to: '/admin/permission-set'
+      }, {
+        label: 'Permissions',
+        to: '/admin/permissions'
       }],
       tooltip: {
         text: 'Settings',
