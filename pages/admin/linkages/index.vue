@@ -32,6 +32,14 @@ const defaultColumns = [{
     label: t('linkage_table_username'),
     sortable: true
 }, {
+    key: 'liveId',
+    label: t('linkage_table_live_id'),
+    sortable: true
+}, {
+    key: 'demoId',
+    label: t('linkage_table_demo_id'),
+    sortable: true
+}, {
     key: 'actions',
     label: t('common_table_action')
 }]

@@ -29,6 +29,18 @@ const defaultColumns = [{
   label: t('investment_table_name'),
   sortable: true
 }, {
+  key: 'strategyCapital.botMethod',
+  label: t('investment_table_strategy_capital'),
+  sortable: true
+}, {
+  key: 'strategySignal.botMethod',
+  label: t('investment_table_strategy_signal'),
+  sortable: true
+}, {
+  key: 'betCount',
+  label: t('investment_table_bet_count'),
+  sortable: true
+}, {
   key: 'balance',
   label: t('investment_table_balance'),
   sortable: true
@@ -41,8 +53,12 @@ const defaultColumns = [{
   label: t('investment_table_amount_win'),
   sortable: true
 }, {
-  key: 'amountLose',
+  key: 'countLose',
   label: t('investment_table_count_lose'),
+  sortable: true
+}, {
+  key: 'amountLose',
+  label: t('investment_table_amount_lose'),
   sortable: true
 }, {
   key: 'status',
@@ -61,9 +77,7 @@ function openCloseInvestmentModal(row: Investment) {
     async onConfirm() {
       const { error } = await investmentService.updateInvestmentById(row.id, { status: row.status == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' })
       notificationUtil.toastRes(toast, error.value, t('investment_update_success'), t('investment_update_failed'))
-      const { data: r, status: s } = await investmentService.filterMyInvestment(query)
-      response.value = r.value
-      status.value = s.value
+      await filterInvestment()
       modal.close()
     },
     async onClose() {
@@ -72,8 +86,20 @@ function openCloseInvestmentModal(row: Investment) {
   })
 }
 
+async function filterInvestment() {
+  const { data: r, status: s } = await investmentService.filterMyInvestment(query)
+  response.value = r.value
+  status.value = s.value
+}
+
 const items = (row: Investment) => [
   [
+    {
+      label: t('common_table_detail'),
+      icon: 'i-heroicons-eye',
+      click: async () => {
+      }
+    },
     {
       label: t('common_table_edit'),
       icon: 'i-heroicons-pencil-square-20-solid',
@@ -132,7 +158,7 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
       <UDashboardModal v-model="isNewInvestmentModalOpen" :title="t('investment_new_investment_modal_title')"
         :description="t('investment_new_investment_modal_desc')" v-if="canCreateInvestment"
         :ui="{ width: 'sm:max-w-md' }">
-        <InvestmentForm @close="isNewInvestmentModalOpen = false" />
+        <InvestmentForm @close="isNewInvestmentModalOpen = false" @success="filterInvestment()" />
       </UDashboardModal>
 
       <UTable v-model:sort="sort" :rows="investment" :columns="columns" :loading="investmentLoading" sort-mode="manual"

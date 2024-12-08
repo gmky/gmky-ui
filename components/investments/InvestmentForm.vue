@@ -6,23 +6,24 @@ import linkageService from '~/services/linkage.service';
 import investmentService from '~/services/investment.service';
 
 const authStore = useAuthStore();
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'success'])
 
 const { t } = useI18n()
+
+const linkageId = computed(() => authStore.getLinkageId)
 
 const state = reactive({
   botName: undefined,
   accountId: undefined,
-  signal: undefined,
-  capital: undefined,
-  command: '1-2-3-4-5-6-7-8-9',
+  strategySignalId: undefined,
+  strategyCapitalId: undefined,
+  listBotAmount: '1-2-3-4-5-6-7-8-9',
   ruleCapital: undefined,
   balance: 0,
   maxWin: 0,
-  maxLose: 0
+  maxLose: 0,
+  linkageId: linkageId.value
 })
-
-const linkageId = computed(() => authStore.getLinkageId)
 
 const { data: getLinkageResp, status: getLinkageStatus } = await linkageService.getLinkageById(linkageId.value)
 const accountOpts = [{
@@ -40,9 +41,11 @@ const ruleCapitalOpts = ['WIN', 'LOSE']
 
 const toast = useToast()
 async function onSubmit(event: FormSubmitEvent<any>) {
-  console.log(state)
-  const error = ref(false)
+  const { error } = await investmentService.createInvestment(state);
   notificationUtil.toastRes(toast, error.value, t('investment_new_success'), t('investment_new_failed'))
+  if (!error.value) {
+    emit('success')
+  }
   emit('close')
 }
 </script>
@@ -63,7 +66,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_signal_title')" name="signal">
-      <USelectMenu v-model="state.signal" :options="signalOpts" :placeholder="$t('investment_new_signal_ph')"
+      <USelectMenu v-model="state.strategySignalId" :options="signalOpts" :placeholder="$t('investment_new_signal_ph')"
         class="space-y-2 space-x-4" option-attribute="botMethod" value-attribute="id">
         <template #option="{ option: bot }">
           <span class="truncate">{{ bot.botMethod }}</span>
@@ -72,13 +75,14 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_capital_title')" name="capital">
-      <USelectMenu v-model="state.capital" :options="capitalOpts" :placeholder="$t('investment_new_capital_ph')"
-        class="space-y-2 space-x-4" option-attribute="botNameVn" value-attribute="id">
+      <USelectMenu v-model="state.strategyCapitalId" :options="capitalOpts"
+        :placeholder="$t('investment_new_capital_ph')" class="space-y-2 space-x-4" option-attribute="botNameVn"
+        value-attribute="id">
       </USelectMenu>
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_command_title')" name="command">
-      <UInput v-model="state.command" :placeholder="$t('investment_new_command_ph')" />
+      <UInput v-model="state.listBotAmount" :placeholder="$t('investment_new_command_ph')" />
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_rule_capital_title')" name="rule-capital">
@@ -88,23 +92,16 @@ async function onSubmit(event: FormSubmitEvent<any>) {
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_balance_title')" name="balance">
-      <UInput v-model="state.balance" type="text" :placeholder="$t('investment_new_balance_ph')" />
+      <UInput v-model="state.balance" type="number" :placeholder="$t('investment_new_balance_ph')" />
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_max_win_title')" name="max-win">
-      <UInput v-model="state.maxWin" type="text" :placeholder="$t('investment_new_max_win_ph')" />
+      <UInput v-model="state.maxWin" type="number" :placeholder="$t('investment_new_max_win_ph')" />
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_max_lose_title')" name="max-lose">
-      <UInput v-model="state.maxLose" type="text" :placeholder="$t('investment_new_max_lose_ph')" />
+      <UInput v-model="state.maxLose" type="number" :placeholder="$t('investment_new_max_lose_ph')" />
     </UFormGroup>
-
-    <!-- <UFormGroup :label="$t('user_create_form_role_label')" name="role">
-      <USelectMenu v-model="selected" :loading="roleLoading" :searchable="searchRole"
-        :placeholder="$t('user_create_form_role_search_placeholder_label')" class="space-y-2 space-x-4"
-        option-attribute="name" multiple trailing by="id">
-      </USelectMenu>
-    </UFormGroup> -->
 
     <div class="flex justify-end gap-3">
       <UButton :label="$t('common_form_cancel')" color="gray" variant="ghost" @click="emit('close')" />

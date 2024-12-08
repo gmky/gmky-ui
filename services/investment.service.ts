@@ -22,5 +22,8 @@ export default {
   },
   updateInvestmentById(investmentId, data) {
     return useFetch<any>(`/api/client-api/v1/investments/${investmentId}`, { method: 'PUT', server: false, body: data, default: () => null })
+  },
+  createInvestment(data) {
+    return useFetch<Investment>('/api/client-api/v1/investments', { method: 'POST', server: false, body: data })
   }
 }
