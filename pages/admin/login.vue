@@ -67,12 +67,14 @@ const isSelectPackageModalOpen = ref(false)
             <UModal v-model="isSelectPackageModalOpen">
                 <SelectLinkageForm />
             </UModal>
-            <UCard class="max-w-sm w-full">
-                <UAuthForm :fields="fields" :validate="validate" :title="$t('login_form_title')" align="top"
-                    :loading="loading" icon="i-heroicons-lock-closed"
-                    :ui="{ base: 'text-center', footer: 'text-center' }" @submit="onSubmit">
+            <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
+                <UAuthForm :fields="fields" :validate="validate" :title="$t('login_form_title')" :loading="loading"
+                    icon="i-heroicons-lock-closed" :ui="{ base: 'text-center', footer: 'text-center' }"
+                    :submit-button="{ label: $t('login_form_submit_btn') }" @submit="onSubmit">
                     <template #description>
-                        {{ $t('login_form_msg') }}
+                        {{ $t('login_form_msg') }} <NuxtLink to="/admin/signup" class="text-primary font-medium"> {{
+                            $t('login_form_reg_link') }}
+                        </NuxtLink>.
                     </template>
 
                     <template #password-hint>

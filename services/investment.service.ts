@@ -1,4 +1,4 @@
-import type { BotStrategy, Investment, Meta } from "~/types"
+import type { BetHistory, BotStrategy, Investment, Meta } from "~/types"
 
 export type FilterPackageResponse = {
   data: Investment[],
@@ -7,6 +7,11 @@ export type FilterPackageResponse = {
 
 export type GetBotStrategyResponse = {
   data: BotStrategy[],
+  meta: Meta
+}
+
+export type GetBetHistoryResponse = {
+  data: BetHistory[],
   meta: Meta
 }
 
@@ -25,5 +30,8 @@ export default {
   },
   createInvestment(data) {
     return useFetch<Investment>('/api/client-api/v1/investments', { method: 'POST', server: false, body: data })
+  },
+  getHistoryByInvestmentId(investmentId, query) {
+    return useFetch<GetBetHistoryResponse>(`/api/client-api/v1/investments/${investmentId}/history`, { query: query, server: false, default: () => (paginationUtil.defaultResponse()) })
   }
 }

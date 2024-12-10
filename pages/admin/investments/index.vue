@@ -5,6 +5,7 @@ import investmentService from '~/services/investment.service';
 import type { Investment } from '~/types';
 import { useAuthStore } from '~/stores/auth';
 import InvestmentForm from '~/components/investments/InvestmentForm.vue';
+import InvestmentDetail from '~/components/investments/InvestmentDetail.vue';
 
 definePageMeta({
   middleware: [
@@ -92,12 +93,16 @@ async function filterInvestment() {
   status.value = s.value
 }
 
+const selectedInvestmentId = ref(0)
+
 const items = (row: Investment) => [
   [
     {
       label: t('common_table_detail'),
       icon: 'i-heroicons-eye',
       click: async () => {
+        selectedInvestmentId.value = row.id
+        isInvestmentDetailModalOpen.value = true
       }
     },
     {
@@ -130,6 +135,8 @@ const investmentLoading = computed(() => status.value == 'pending')
 const isNewInvestmentModalOpen = ref(false)
 const canCreateInvestment = true // await useAuthorize('investment:create')
 
+const isInvestmentDetailModalOpen = ref(false)
+
 // Computed
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
 </script>
@@ -159,6 +166,11 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
         :description="t('investment_new_investment_modal_desc')" v-if="canCreateInvestment"
         :ui="{ width: 'sm:max-w-md' }">
         <InvestmentForm @close="isNewInvestmentModalOpen = false" @success="filterInvestment()" />
+      </UDashboardModal>
+
+      <UDashboardModal v-model="isInvestmentDetailModalOpen" :title="t('investment_detail_title')"
+        :description="t('investment_detail_desc')" :ui="{ width: 'sm:max-w-md' }" fullscreen>
+        <InvestmentDetail @close="isInvestmentDetailModalOpen = false" :investment-id="selectedInvestmentId" />
       </UDashboardModal>
 
       <UTable v-model:sort="sort" :rows="investment" :columns="columns" :loading="investmentLoading" sort-mode="manual"

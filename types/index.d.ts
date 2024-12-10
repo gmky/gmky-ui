@@ -149,3 +149,20 @@ export interface BotStrategy {
   Status: string
   sameColor: boolean
 }
+
+export interface BetHistory {
+  id: number
+  externalId: string
+  userId: string
+  linkageId; number
+  email: string
+  action: string
+  amount: number
+  type: string
+  accMarketing: boolean
+  accountId: string
+  status: string
+  botId: number
+  amountWin: number
+  amountLose: number
+}
