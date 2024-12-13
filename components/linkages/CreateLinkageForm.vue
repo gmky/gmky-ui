@@ -10,9 +10,9 @@ const toast = useToast()
 const { t } = useI18n()
 
 const state = reactive({
-  domain: undefined,
-  username: undefined,
-  password: undefined
+  domain: "http://localhost",
+  username: "Hoangphuc67898888@gmail.com",
+  password: "Linh1991"
 })
 
 // https://ui.nuxt.com/components/form

@@ -2,6 +2,7 @@
 import type { FormError } from '#ui/types'
 import { useI18n } from 'vue-i18n';
 import SelectLinkageForm from '~/components/SelectLinkageForm.vue';
+import CreateLinkageForm from '~/components/linkages/CreateLinkageForm.vue';
 import { useAuthStore } from '~/stores/auth';
 
 definePageMeta({
@@ -50,6 +51,7 @@ async function onSubmit(data: any) {
         await signIn({ ...data }, { redirect: false, callbackUrl: '/admin', external: false })
         await authStore.getAuthorities()
         isSelectPackageModalOpen.value = true
+        loading.value = false
     } catch (ex) {
         loading.value = false
         failedToLogin.value = true
@@ -57,6 +59,17 @@ async function onSubmit(data: any) {
 }
 
 const isSelectPackageModalOpen = ref(false)
+const isNewLinkageModalOpen = ref(false)
+
+async function createLinkage() {
+    isNewLinkageModalOpen.value = true
+    isSelectPackageModalOpen.value = false
+}
+
+async function closeCreateLinkage() {
+    isNewLinkageModalOpen.value = false
+    isSelectPackageModalOpen.value = true
+}
 </script>
 
 <!-- eslint-disable vue/multiline-html-element-content-newline -->
@@ -65,8 +78,13 @@ const isSelectPackageModalOpen = ref(false)
     <ClientOnly>
         <UContainer class="flex items-center justify-center h-screen">
             <UModal v-model="isSelectPackageModalOpen">
-                <SelectLinkageForm />
+                <SelectLinkageForm @create="createLinkage" />
             </UModal>
+            <UDashboardModal v-model="isNewLinkageModalOpen" :title="t('linkage_create_modal_title')"
+                :close-button="{ block: false, disabled: true }" :description="$t('linkage_create_modal_desc')"
+                :ui="{ width: 'sm:max-w-md' }">
+                <CreateLinkageForm @close="closeCreateLinkage" />
+            </UDashboardModal>
             <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
                 <UAuthForm :fields="fields" :validate="validate" :title="$t('login_form_title')" :loading="loading"
                     icon="i-heroicons-lock-closed" :ui="{ base: 'text-center', footer: 'text-center' }"

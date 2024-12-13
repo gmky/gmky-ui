@@ -3,7 +3,7 @@ import type { FormError, FormSubmitEvent } from '#ui/types'
 import { useI18n } from 'vue-i18n';
 import linkageService from '~/services/linkage.service';
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'create'])
 
 const { data: response, status } = await linkageService.filterLinkages({})
 
@@ -17,7 +17,7 @@ async function setLinkageId(linkageId: number) {
 }
 
 async function createNewLinkage() {
-  router.push('/admin')
+  emit('create')
 }
 
 </script>
