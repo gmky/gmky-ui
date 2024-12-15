@@ -14,5 +14,11 @@ export default {
   },
   getLinkageById(linkageId) {
     return useFetch<Linkage>(`/api/client-api/v1/linkages/${linkageId}`, { server: false, default: () => null })
+  },
+  updateLinkageById(linkageId, data) {
+    return useFetch<Linkage>(`/api/client-api/v1/linkages/${linkageId}`, { method: 'PUT', body: data, server: false })
+  },
+  deleteLinkageById(linkageId) {
+    return useFetch<any>(`/api/client-api/v1/linkages/${linkageId}`, { method: 'DELETE', server: false })
   }
 }

@@ -23,8 +23,8 @@ const router = useRoute()
 
 const { t } = useI18n()
 
-const itemPerPages = ref(+router.query.page || 10)
-const currentPage = ref(+router.query.size || 1)
+const itemPerPages = ref(+router.query.size || 10)
+const currentPage = ref(+router.query.page || 1)
 
 const defaultColumns = [{
     key: 'id',
@@ -65,6 +65,7 @@ const selectedPsId = ref(null);
 
 const actions = (row: PermissionSet) => [
     [{
+        disabled: row.type == 'TEMPLATE',
         label: t('common_table_edit'),
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => {
@@ -72,6 +73,7 @@ const actions = (row: PermissionSet) => [
             selectedPsId.value = row.id
         }
     }], [{
+        disabled: row.type == 'TEMPLATE',
         label: t('common_table_delete'),
         icon: 'i-heroicons-trash',
         click: () => {

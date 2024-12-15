@@ -2,7 +2,7 @@
 import { sub, format } from 'date-fns'
 import { useI18n } from 'vue-i18n';
 import investmentService from '~/services/investment.service';
-import type { Period, Range } from '~/types';
+import type { Investment, Period, Range } from '~/types';
 
 const props = defineProps({
   investmentId: Number
@@ -67,6 +67,17 @@ function getColorFromAction(action: string) {
   return 'red'
 }
 
+const info = ref<Investment>(null)
+
+async function getInvestmentDetail() {
+  const { data: investInfo, status: getDetailStatus } = await investmentService.getInvestmentById(props.investmentId);
+  info.value = investInfo.value
+}
+
+onMounted(() => {
+  getInvestmentDetail()
+})
+
 const currentPage = ref(1)
 const pageSize = ref(5)
 
@@ -86,6 +97,17 @@ const totalItems = computed(() => response.value.meta.total || 0)
 
 <template>
   <div>
+    <UDashboardCard class="mb-4">
+      <template #title>
+        {{ info?.botName }}
+        <UBadge size="xs" :label="info?.status" :color="info?.status == 'ACTIVE' ? 'green' : 'red'" variant="subtle"
+          class="capitalize" />
+      </template>
+      <template #description>
+        {{ info?.accountId }} ({{ info?.accountType }})
+      </template>
+      <InvestmentsInvestmentDetailInfo :info="info" />
+    </UDashboardCard>
     <HomeChart :period="period" :range="range" />
     <UTable v-model:sort="sort" :rows="histories" :columns="columns" sort-mode="manual" class="w-full"
       :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">

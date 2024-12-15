@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n';
 import CreateLinkageForm from '~/components/linkages/CreateLinkageForm.vue';
+import ConfirmationModal from '~/components/common/ConfirmationModal.vue';
 import linkageService from '~/services/linkage.service';
 import type { Linkage } from '~/types';
 
@@ -44,9 +45,45 @@ const defaultColumns = [{
     label: t('common_table_action')
 }]
 
+const modal = useModal()
+const toast = useToast()
+
+function openUpdateLinkageModal(row: Linkage) {
+    modal.open(ConfirmationModal, {
+        title: row.status == 'ACTIVE' ? t('linkage_table_action_disable_title') : t('linkage_table_action_enable_title'),
+        message: row.status == 'ACTIVE' ? t('linkage_table_action_disable_msg') : t('linkage_table_action_enable_msg'),
+        async onConfirm() {
+            const { error } = await linkageService.updateLinkageById(row.id, { status: row.status == 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' })
+            notificationUtil.toastRes(toast, error.value, t('linkage_update_success'), t('linkage_update_failed'))
+            await filterLinkage()
+            modal.close()
+        },
+        async onClose() {
+            modal.close()
+        }
+    })
+}
+
+function openDeleteLinkageModal(row: Linkage) {
+    modal.open(ConfirmationModal, {
+        title: t('linkage_table_action_delete_title'),
+        message: t('linkage_table_action_delete_msg'),
+        async onConfirm() {
+            const { error } = await linkageService.deleteLinkageById(row.id)
+            notificationUtil.toastRes(toast, error.value, t('linkage_update_success'), t('linkage_update_failed'))
+            await filterLinkage()
+            modal.close()
+        },
+        async onClose() {
+            modal.close()
+        }
+    })
+}
+
 const items = (row: Linkage) => [
     [
         {
+            disabled: row.status == 'DELETED',
             label: t('common_table_edit'),
             icon: 'i-heroicons-pencil-square-20-solid',
             click: async () => {
@@ -54,21 +91,31 @@ const items = (row: Linkage) => [
             }
         },
         {
+            disabled: row.status == 'DELETED',
             label: row.status === 'ACTIVE' ? t('linkage_table_action_disable') : t('linkage_table_action_enable'),
             icon: 'i-heroicons-lock-closed',
             click: async () => {
+                openUpdateLinkageModal(row)
             }
         }
     ],
     [
         {
+            disabled: row.status == 'DELETED',
             label: t('common_table_delete'),
             icon: 'i-heroicons-arrow-left-end-on-rectangle',
             click: () => {
+                openDeleteLinkageModal(row)
             }
         }
     ]
 ]
+
+async function filterLinkage() {
+    const { data: r, status: s } = await linkageService.filterLinkages(query)
+    response.value = r.value
+    status.value = s.value
+}
 
 const selectedColumns = ref(defaultColumns)
 const selectedColumnOpts = ref(defaultColumns.filter(item => !!item.label))

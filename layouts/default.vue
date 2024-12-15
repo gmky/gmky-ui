@@ -1,90 +1,99 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
+import type { DashboardSidebarLink } from '~/libs/ui-pro/types';
 import { useAuthStore } from '~/stores/auth';
 
 const route = useRoute()
 const appConfig = useAppConfig()
 const { isHelpSlideoverOpen } = useDashboard()
 
-// const links = [{
-//   id: 'home',
-//   label: 'Home',
-//   icon: 'i-heroicons-home',
-//   to: '/admin',
-//   tooltip: {
-//     text: 'Home',
-//     shortcuts: ['G', 'H']
-//   }
-// }, {
-//   id: 'inbox',
-//   label: 'Inbox',
-//   icon: 'i-heroicons-inbox',
-//   to: '/admin/inbox',
-//   badge: '4',
-//   tooltip: {
-//     text: 'Inbox',
-//     shortcuts: ['G', 'I']
-//   }
-// }, {
-//   id: 'users',
-//   label: 'Users',
-//   icon: 'i-heroicons-users',
-//   to: '/admin/users',
-//   tooltip: {
-//     text: 'Users',
-//     shortcuts: ['G', 'U']
-//   }
-// }, {
-//   id: 'roles',
-//   label: 'Roles',
-//   icon: 'i-heroicons-user-group',
-//   to: '/admin/roles',
-//   tooltip: {
-//     text: 'Roles',
-//     shortcuts: ['R']
-//   }
-// }, {
-//   id: 'permissionset',
-//   label: 'Permission Set',
-//   icon: 'i-heroicons-adjustments-horizontal',
-//   to: '/admin/permission-set',
-//   tooltip: {
-//     text: 'Permission Set',
-//     shortcuts: ['PS']
-//   }
-// },{
-//   id: 'permissions',
-//   label: 'Permissions',
-//   icon: 'i-heroicons-key',
-//   to: '/admin/permissions',
-//   tooltip: {
-//     text: 'Permissions',
-//     shortcuts: ['P']
-//   }
-// }, {
-//   id: 'settings',
-//   label: 'Settings',
-//   to: '/admin/settings',
-//   icon: 'i-heroicons-cog-8-tooth',
-//   children: [{
-//     label: 'General',
-//     to: '/admin/settings',
-//     exact: true
-//   }, {
-//     label: 'Members',
-//     to: '/admin/settings/members'
-//   }, {
-//     label: 'Notifications',
-//     to: '/admin/settings/notifications'
-//   }],
-//   tooltip: {
-//     text: 'Settings',
-//     shortcuts: ['G', 'S']
-//   }
-// }]
+const { t } = useI18n()
+
+const allLinks = ref(
+  [{
+    id: 'home',
+    label: t('links_home_label'),
+    icon: 'i-heroicons-home',
+    to: '/admin',
+    tooltip: {
+      text: 'Home',
+      shortcuts: ['G', 'H']
+    },
+    authority: 'public'
+  },
+  {
+    id: 'linkages',
+    label: t('links_linkage_label'),
+    icon: 'i-heroicons-link',
+    to: '/admin/linkages',
+    tooltip: {
+      text: 'Linkages',
+      shortcuts: ['L', 'K']
+    },
+    authority: 'public'
+  }, {
+    id: 'investments',
+    label: t('links_investment_label'),
+    icon: 'i-heroicons-rectangle-stack',
+    to: '/admin/investments',
+    tooltip: {
+      text: 'Investments',
+      shortcuts: ['P', 'K']
+    },
+    authority: 'public'
+  },
+  {
+    id: 'administrator',
+    label: t('links_admin_label'),
+    to: '/admin/settings',
+    icon: 'i-heroicons-cog-8-tooth',
+    authority: 'public',
+    children: [{
+      label: t('links_admin_user_label'),
+      to: '/admin/users',
+      authority: 'user:manage'
+    }, {
+      label: t('links_admin_role_label'),
+      to: '/admin/roles',
+      authority: 'role:manage'
+    }, {
+      label: t('links_admin_permission_set'),
+      to: '/admin/permission-set',
+      authority: 'permissionset:manage'
+    }, {
+      label: t('links_admin_permission'),
+      to: '/admin/permissions',
+      authority: 'permission:manage'
+    }],
+    tooltip: {
+      text: 'Settings',
+      shortcuts: ['G', 'S']
+    }
+  }]
+)
 
 const authStore = useAuthStore()
 
-const links = computed(() => authStore.getLinks)
+function checkLinks(links: any[]) {
+  var result = []
+  links.forEach(item => {
+    if (item.children) {
+      item.children = checkLinks(item.children)
+    }
+    if (item.authority == 'public') {
+      result.push(item)
+    } else {
+      let [resource, authority] = item.authority.split(':');
+      const granted = !!authStore.getGrantedAuthorities.find(item => item.resource == resource && item.permissions.includes(authority))
+      if (granted) {
+        result.push(item)
+      }
+    }
+  })
+  return result;
+}
+
+const links = computed(() => checkLinks(allLinks.value)) as ComputedRef<DashboardSidebarLink[]>
 
 const footerLinks = [
   //   {
@@ -113,7 +122,7 @@ const groups = [{
       window.open(`https://github.com/nuxt-ui-pro/dashboard/blob/main/pages${route.path === '/' ? '/index' : route.path}.vue`, '_blank')
     }
   }]
-}]
+}] as any[]
 
 const defaultColors = ref(['green', 'teal', 'cyan', 'sky', 'blue', 'indigo', 'violet'].map(color => ({ label: color, chip: color, click: () => appConfig.ui.primary = color })))
 const colors = computed(() => defaultColors.value.map(color => ({ ...color, active: appConfig.ui.primary === color.label })))

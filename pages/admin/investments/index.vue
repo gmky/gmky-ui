@@ -6,6 +6,7 @@ import type { Investment } from '~/types';
 import { useAuthStore } from '~/stores/auth';
 import InvestmentForm from '~/components/investments/InvestmentForm.vue';
 import InvestmentDetail from '~/components/investments/InvestmentDetail.vue';
+import UpdateInvestmentForm from '~/components/investments/UpdateInvestmentForm.vue';
 
 definePageMeta({
   middleware: [
@@ -106,10 +107,12 @@ const items = (row: Investment) => [
       }
     },
     {
+      disabled: row.status === 'ACTIVE',
       label: t('common_table_edit'),
       icon: 'i-heroicons-pencil-square-20-solid',
       click: async () => {
-
+        selectedInvestmentId.value = row.id
+        isUpdateInvestmentModalOpen.value = true
       }
     },
     {
@@ -133,6 +136,7 @@ const totalItems = computed(() => response.value.meta.total || 0)
 const investmentLoading = computed(() => status.value == 'pending')
 
 const isNewInvestmentModalOpen = ref(false)
+const isUpdateInvestmentModalOpen = ref(false)
 const canCreateInvestment = true // await useAuthorize('investment:create')
 
 const isInvestmentDetailModalOpen = ref(false)
@@ -171,6 +175,12 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
       <UDashboardModal v-model="isInvestmentDetailModalOpen" :title="t('investment_detail_title')"
         :description="t('investment_detail_desc')" :ui="{ width: 'sm:max-w-md' }" fullscreen>
         <InvestmentDetail @close="isInvestmentDetailModalOpen = false" :investment-id="selectedInvestmentId" />
+      </UDashboardModal>
+
+      <UDashboardModal v-model="isUpdateInvestmentModalOpen" :title="t('investment_update_modal_title')"
+        :description="t('investment_update_modal_desc')" v-if="canCreateInvestment" :ui="{ width: 'sm:max-w-md' }">
+        <UpdateInvestmentForm @close="isUpdateInvestmentModalOpen = false" @success="filterInvestment()"
+          :investment-id="selectedInvestmentId" />
       </UDashboardModal>
 
       <UTable v-model:sort="sort" :rows="investment" :columns="columns" :loading="investmentLoading" sort-mode="manual"

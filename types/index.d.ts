@@ -127,6 +127,7 @@ export interface Investment {
   countWin: number
   countLose: number
   amountWin: number
+  accountId: string
   amountLose: number
   balance: number
   startAt: string
@@ -134,6 +135,15 @@ export interface Investment {
   userId: string
   linkageId: number
   status: string
+  listBotAmount: string
+  ruleCapital: string
+  maxWin: number
+  maxLose: number
+  strategySignalId: number
+  strategySignal: BotStrategy
+  strategyCapital: BotStrategy
+  strategyCapitalId: number
+  accountType: string
 }
 
 export interface BotStrategy {

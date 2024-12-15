@@ -33,5 +33,8 @@ export default {
   },
   getHistoryByInvestmentId(investmentId, query) {
     return useFetch<GetBetHistoryResponse>(`/api/client-api/v1/investments/${investmentId}/history`, { query: query, server: false, default: () => (paginationUtil.defaultResponse()) })
+  },
+  getInvestmentById(investmentId) {
+    return useFetch<Investment>(`/api/client-api/v1/investments/${investmentId}`, { server: false })
   }
 }

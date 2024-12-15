@@ -101,6 +101,7 @@ function openDeleteRoleModal(row: Role) {
 
 const actions = (row: Role) => [
     [{
+        disabled: row.type == 'TEMPLATE',
         label: t('common_table_edit'),
         icon: 'i-heroicons-pencil-square-20-solid',
         click: () => console.log('Edit', row.id)
@@ -117,6 +118,7 @@ const actions = (row: Role) => [
             openDisableRoleModal(row)
         }
     }], [{
+        disabled: row.type == 'TEMPLATE',
         label: t('common_table_delete'),
         icon: 'i-heroicons-trash',
         click: () => {
