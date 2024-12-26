@@ -22,8 +22,11 @@ const state = reactive({
   balance: 0,
   maxWin: 0,
   maxLose: 0,
-  linkageId: linkageId.value
+  linkageId: linkageId.value,
+  leader: undefined
 })
+
+const selectedStrategyCapital = computed(() => capitalOpts.find(item => item.id == state.strategyCapitalId))
 
 const { data: getLinkageResp, status: getLinkageStatus } = await linkageService.getLinkageById(linkageId.value)
 const accountOpts = [{
@@ -65,7 +68,20 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       </USelectMenu>
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_signal_title')" name="signal">
+    <UFormGroup :label="$t('investment_new_capital_title')" name="capital">
+      <USelectMenu v-model="state.strategyCapitalId" :options="capitalOpts"
+        :placeholder="$t('investment_new_capital_ph')" class="space-y-2 space-x-4" option-attribute="botNameVn"
+        value-attribute="id">
+      </USelectMenu>
+    </UFormGroup>
+
+    <UFormGroup :label="$t('investment_new_leader_title')" name="leader"
+      v-if="selectedStrategyCapital?.botCode == 'COPY'">
+      <UInput v-model="state.leader" :placeholder="$t('investment_new_leader_ph')" />
+    </UFormGroup>
+
+    <UFormGroup :label="$t('investment_new_signal_title')" name="signal"
+      v-if="selectedStrategyCapital?.botCode != 'COPY'">
       <USelectMenu v-model="state.strategySignalId" :options="signalOpts" :placeholder="$t('investment_new_signal_ph')"
         class="space-y-2 space-x-4" option-attribute="botMethod" value-attribute="id">
         <template #option="{ option: bot }">
@@ -74,18 +90,13 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       </USelectMenu>
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_capital_title')" name="capital">
-      <USelectMenu v-model="state.strategyCapitalId" :options="capitalOpts"
-        :placeholder="$t('investment_new_capital_ph')" class="space-y-2 space-x-4" option-attribute="botNameVn"
-        value-attribute="id">
-      </USelectMenu>
-    </UFormGroup>
-
-    <UFormGroup :label="$t('investment_new_command_title')" name="command">
+    <UFormGroup :label="$t('investment_new_command_title')" name="command"
+      v-if="selectedStrategyCapital?.botCode != 'COPY'">
       <UInput v-model="state.listBotAmount" :placeholder="$t('investment_new_command_ph')" />
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_rule_capital_title')" name="rule-capital">
+    <UFormGroup :label="$t('investment_new_rule_capital_title')" name="rule-capital"
+      v-if="selectedStrategyCapital?.botCode != 'COPY'">
       <USelectMenu v-model="state.ruleCapital" :options="ruleCapitalOpts"
         :placeholder="$t('investment_new_rule_capital_ph')" class="space-y-2 space-x-4">
       </USelectMenu>

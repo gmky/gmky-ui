@@ -154,9 +154,10 @@ export interface BotStrategy {
   botMethod: string
   botDescVn: string
   botDescEn: string
+  botCode: string
   botRuleStrategy: string
   botRuleCapital: string
-  Status: string
+  status: string
   sameColor: boolean
 }
 

@@ -122,6 +122,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
         investment_new_capital_ph: 'Chiến lược vốn',
         investment_new_command_title: 'Các lệnh cược',
         investment_new_command_ph: 'Các lệnh cược',
+        investment_new_leader_title: 'Tài khoản chuyên gia',
+        investment_new_leader_ph: 'Tài khoản chuyên gia',
         investment_new_rule_capital_title: 'Hình thức cược',
         investment_new_rule_capital_ph: 'Hình thức cược',
         investment_new_max_win_title: 'Số tiền lãi tối đa',
@@ -255,7 +257,13 @@ export default defineNuxtPlugin(({ vueApp }) => {
         linkage_create_form_link_success: 'Liên kết sàn thành công',
         linkage_create_form_link_failed: 'Liên kết sàn thất bại',
 
-        notification_title: 'Thông báo'
+        notification_title: 'Thông báo',
+        link_professional_label: 'Chuyên gia',
+        professional_title: 'Chế độ chuyên gia',
+        professional_up_btn: 'Tăng',
+        professional_down_btn: 'Giảm',
+        professional_bet_success_msg: 'Đặt lệnh thành công',
+        professional_bet_failed_msg: 'Đặt lệnh không thành công',
       }
     }
   })

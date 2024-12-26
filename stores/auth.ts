@@ -6,7 +6,8 @@ export const useAuthStore = defineStore('authStore', {
   state: () => ({
     grantedAuthorities: [] as SummaryItem[],
     loaded: false,
-    linkageId: null
+    linkageId: null,
+    linkage: null
   }),
   actions: {
     async getAuthorities() {
@@ -28,6 +29,10 @@ export const useAuthStore = defineStore('authStore', {
     async setLinkageId(linkageId) {
       this.linkageId = linkageId
       localStorage.setItem("linkageId", linkageId)
+    },
+    async setLinkage(data) {
+      this.linkage = data
+      localStorage.setItem("linkage", JSON.stringify(data))
     }
   },
   getters: {
@@ -39,6 +44,14 @@ export const useAuthStore = defineStore('authStore', {
       if (!data) {
         data = localStorage.getItem("linkageId")
         state.linkageId = data
+      }
+      return data;
+    },
+    getLinkage(state) {
+      var data = state.linkage;
+      if (!data) {
+        data = JSON.parse(localStorage.getItem("linkage"))
+        state.linkage = data
       }
       return data;
     },

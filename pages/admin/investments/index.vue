@@ -35,7 +35,7 @@ const defaultColumns = [{
   label: t('investment_table_strategy_capital'),
   sortable: true
 }, {
-  key: 'strategySignal.botMethod',
+  key: 'signal',
   label: t('investment_table_strategy_signal'),
   sortable: true
 }, {
@@ -189,6 +189,10 @@ const columns = computed(() => defaultColumns.filter(column => selectedColumns.v
         <template #status-data="{ row }">
           <UBadge :label="row.status" :color="row.status === 'ACTIVE' ? 'green' : 'red'" variant="subtle"
             class="capitalize" />
+        </template>
+
+        <template #signal-data="{ row }">
+          {{ row.strategySignal?.botMethod || row.leader }}
         </template>
 
         <template #actions-data="{ row }">

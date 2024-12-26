@@ -41,8 +41,17 @@ const allLinks = ref(
       shortcuts: ['P', 'K']
     },
     authority: 'public'
-  },
-  {
+  }, {
+    id: 'professional',
+    label: t('link_professional_label'),
+    icon: 'i-heroicons-rectangle-stack',
+    to: '/admin/professional',
+    tooltip: {
+      text: 'Professional',
+      shortcuts: ['P', 'K']
+    },
+    authority: 'public'
+  }, {
     id: 'administrator',
     label: t('links_admin_label'),
     to: '/admin/settings',
