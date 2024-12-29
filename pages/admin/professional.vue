@@ -26,7 +26,7 @@ const linkage = authStore.getLinkage
 
 const accountId = ref(linkage?.liveId)
 
-const wssURL = computed(() => `ws://${linkage.domain}:2096`)
+const wssURL = computed(() => `wss://${linkage.domain}:2096`)
 
 const ws = new WebSocket(wssURL.value)
 
