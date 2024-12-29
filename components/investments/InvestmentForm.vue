@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormError } from '#ui/types'
 import type { FormSubmitEvent } from '#ui/types'
 import { useI18n } from 'vue-i18n';
 import { useAuthStore } from '~/stores/auth';
@@ -27,6 +28,13 @@ const state = reactive({
 })
 
 const selectedStrategyCapital = computed(() => capitalOpts.find(item => item.id == state.strategyCapitalId))
+const isCopy = computed(() => selectedStrategyCapital.value?.botCode == 'COPY')
+
+const validate = (state: any) => {
+  const errors: FormError[] = []
+  if (isCopy && !state.leader) errors.push({ path: 'leader', message: t('investment_new_form_leader_validation') })
+  return errors
+}
 
 const { data: getLinkageResp, status: getLinkageStatus } = await linkageService.getLinkageById(linkageId.value)
 const accountOpts = [{
@@ -54,7 +62,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 </script>
 
 <template>
-  <UForm :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup :label="$t('investment_new_name_title')" name="bot-name">
       <UInput v-model="state.botName" type="text" :placeholder="$t('investment_new_name_ph')" autofocus />
     </UFormGroup>
@@ -75,13 +83,11 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       </USelectMenu>
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_leader_title')" name="leader"
-      v-if="selectedStrategyCapital?.botCode == 'COPY'">
+    <UFormGroup :label="$t('investment_new_leader_title')" name="leader" v-if="isCopy">
       <UInput v-model="state.leader" :placeholder="$t('investment_new_leader_ph')" />
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_signal_title')" name="signal"
-      v-if="selectedStrategyCapital?.botCode != 'COPY'">
+    <UFormGroup :label="$t('investment_new_signal_title')" name="signal" v-if="!isCopy">
       <USelectMenu v-model="state.strategySignalId" :options="signalOpts" :placeholder="$t('investment_new_signal_ph')"
         class="space-y-2 space-x-4" option-attribute="botMethod" value-attribute="id">
         <template #option="{ option: bot }">
@@ -90,13 +96,11 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       </USelectMenu>
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_command_title')" name="command"
-      v-if="selectedStrategyCapital?.botCode != 'COPY'">
+    <UFormGroup :label="$t('investment_new_command_title')" name="command" v-if="!isCopy">
       <UInput v-model="state.listBotAmount" :placeholder="$t('investment_new_command_ph')" />
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_rule_capital_title')" name="rule-capital"
-      v-if="selectedStrategyCapital?.botCode != 'COPY'">
+    <UFormGroup :label="$t('investment_new_rule_capital_title')" name="rule-capital" v-if="!isCopy">
       <USelectMenu v-model="state.ruleCapital" :options="ruleCapitalOpts"
         :placeholder="$t('investment_new_rule_capital_ph')" class="space-y-2 space-x-4">
       </USelectMenu>

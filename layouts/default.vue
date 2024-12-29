@@ -82,6 +82,7 @@ const allLinks = ref(
 )
 
 const authStore = useAuthStore()
+const linkage = authStore.getLinkage
 
 function checkLinks(links: any[]) {
   var result = []
@@ -162,10 +163,9 @@ const colors = computed(() => defaultColors.value.map(color => ({ ...color, acti
 
         <UDashboardSidebarLinks :links="footerLinks" />
 
-        <UDivider class="sticky bottom-0" />
-
+        <UDivider class="sticky bottom-9" />
+        <UAlert class="mb-2" :description="linkage.domain" :title="$t('common_linkage_info')" />
         <template #footer>
-          <!-- ~/components/UserDropdown.vue -->
           <UserDropdown />
         </template>
       </UDashboardSidebar>

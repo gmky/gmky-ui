@@ -46,6 +46,7 @@ export default defineNuxtPlugin(({ vueApp }) => {
         common_confirmation_yes: 'Đồng ý',
         common_confirmation_no: 'Hủy',
         common_usdt: 'USDT',
+        common_linkage_info: 'Tài khoản bạn liên kết',
         user_title: 'Người dùng',
         user_filter_placeholder: 'Lọc người dùng...',
         user_new_user_btn: 'Tạo mới',
@@ -111,6 +112,7 @@ export default defineNuxtPlugin(({ vueApp }) => {
         investment_new_investment_modal_desc: 'Tạo một gói đầu tư của bạn',
         investment_new_success: 'Tạo mới gói đầu tư thành công',
         investment_new_failed: 'Tạo mới gói đầu tư thất bại',
+        investment_new_form_leader_validation: 'ID chuyên gia không được để trống',
 
         investment_new_name_title: 'Tên bot',
         investment_new_name_ph: 'Tên bot',
@@ -122,8 +124,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
         investment_new_capital_ph: 'Chiến lược vốn',
         investment_new_command_title: 'Các lệnh cược',
         investment_new_command_ph: 'Các lệnh cược',
-        investment_new_leader_title: 'Tài khoản chuyên gia',
-        investment_new_leader_ph: 'Tài khoản chuyên gia',
+        investment_new_leader_title: 'ID chuyên gia',
+        investment_new_leader_ph: 'ID chuyên gia',
         investment_new_rule_capital_title: 'Hình thức cược',
         investment_new_rule_capital_ph: 'Hình thức cược',
         investment_new_max_win_title: 'Số tiền lãi tối đa',
@@ -259,11 +261,15 @@ export default defineNuxtPlugin(({ vueApp }) => {
 
         notification_title: 'Thông báo',
         link_professional_label: 'Chuyên gia',
-        professional_title: 'Chế độ chuyên gia',
+        professional_title: 'Đặt lệnh thủ công',
         professional_up_btn: 'Tăng',
         professional_down_btn: 'Giảm',
         professional_bet_success_msg: 'Đặt lệnh thành công',
         professional_bet_failed_msg: 'Đặt lệnh không thành công',
+        professional_bet_amount: 'Khoản đầu tư',
+        professional_bet_rate: 'Hệ số nhân',
+        professional_bet_rate_other: 'Khác',
+        professional_count_down: 'Thời gian giao dịch',
       }
     }
   })

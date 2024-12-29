@@ -9,8 +9,8 @@ const { isNotificationsSlideoverOpen } = useDashboard()
 const { locale } = useI18n()
 
 function getNotification(locale, item: Notification) {
-  if (locale == 'vi') return item.translations.find(item => item.locale == 'vi_VN').message
-  if (locale == 'en') return item.translations.find(item => item.locale == 'en_US').message
+  if (locale == 'vi') return item.translations?.find(item => item.locale == 'vi_VN')?.message || item.message
+  if (locale == 'en') return item.translations?.find(item => item.locale == 'en_US')?.message || item.message
   return item.message
 }
 
