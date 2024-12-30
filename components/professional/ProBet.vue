@@ -11,6 +11,8 @@ const props = defineProps({
   linkage: Object,
 })
 
+const emit = defineEmits(['reloadHistory'])
+
 const amount = ref(5)
 
 const betRate = ref(1)
@@ -60,15 +62,20 @@ async function betIt(betType) {
   }
   const { error } = await leaderService.leaderBet(data)
   notificationUtil.toastRes(toast, error.value, t('professional_bet_success_msg'), t('professional_bet_failed_msg'))
+  emit('reloadHistory')
   amount.value = 5
 }
+
+watch(() => props.round, (newVal, oldVal) => {
+  if (oldVal == 'WAITING') emit('reloadHistory')
+})
 
 </script>
 
 <template>
   <UCard>
     <template #header>
-      <UForm :state="null" class="space-y-4">
+      <UForm :state="{}" class="space-y-4">
         <UFormGroup :label="$t('professional_bet_amount')" :ui="{ wrapper: 'w-full' }" class="w-full" name="bet-amount">
           <UInput class="w-full" placeholder="Search..." v-model="amount">
             <template #trailing>

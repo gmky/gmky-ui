@@ -196,3 +196,18 @@ export interface InvestmentChart {
   winAmount: number
   loseAmount: number
 }
+
+export interface LeaderHistory {
+  id: number
+  userId: string
+  linkageId: number
+  action: string
+  accountId: string
+  status: string
+  amount: number
+  amountWin: number
+  amountLose: number
+  createdAt: string
+  updatedAt: string
+  professional: boolean
+}

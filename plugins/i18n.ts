@@ -274,7 +274,8 @@ export default defineNuxtPlugin(({ vueApp }) => {
         professional_info_rate_today: 'Thắng/thua hôm nay',
         professional_info_rate_7day: 'Thắng/thua 7 ngày',
         professional_info_profit_today: 'Lợi nhuận hôm nay',
-        professional_info_profit_7day: 'Lợi nhuận 7 ngày'
+        professional_info_profit_7day: 'Lợi nhuận 7 ngày',
+        professional_mode_title: 'Chuyên gia',
       }
     }
   })
