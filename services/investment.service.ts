@@ -1,4 +1,4 @@
-import type { BetHistory, BotStrategy, Investment, Meta } from "~/types"
+import type { BetHistory, BotStrategy, Investment, InvestmentChart, Meta } from "~/types"
 
 export type FilterPackageResponse = {
   data: Investment[],
@@ -36,5 +36,8 @@ export default {
   },
   getInvestmentById(investmentId) {
     return useFetch<Investment>(`/api/client-api/v1/investments/${investmentId}`, { server: false })
+  },
+  getChart(investmentId) {
+    return useFetch<InvestmentChart[]>(`/api/client-api/v1/investments/${investmentId}/chart`, { server: false })
   }
 }

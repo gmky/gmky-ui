@@ -16,7 +16,7 @@ function close() {
   emit('close')
 }
 
-const range = ref<Range>({ start: sub(new Date(), { days: 14 }), end: new Date() })
+const range = ref<Range>({ start: sub(new Date(), { days: 7 }), end: new Date() })
 const period = ref<Period>('daily')
 
 const defaultColumns = [{
@@ -86,6 +86,8 @@ const query = computed(() => ({ page: currentPage.value - 1, size: pageSize.valu
 
 const { data: response, status } = await investmentService.getHistoryByInvestmentId(props.investmentId, query);
 
+const { data: cData } = await investmentService.getChart(props.investmentId);
+
 const histories = computed(() => response.value.data || [])
 
 const selectedColumns = ref(defaultColumns)
@@ -108,7 +110,7 @@ const totalItems = computed(() => response.value.meta.total || 0)
       </template>
       <InvestmentsInvestmentDetailInfo :info="info" />
     </UDashboardCard>
-    <HomeChart :period="period" :range="range" />
+    <HomeChart :period="period" :range="range" :c-data="cData" />
     <UTable v-model:sort="sort" :rows="histories" :columns="columns" sort-mode="manual" class="w-full"
       :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
 

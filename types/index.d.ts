@@ -189,3 +189,10 @@ export interface LeaderStat {
   weeklyWinCount: number
   weeklyLoseCount: number
 }
+
+export interface InvestmentChart {
+  date: string
+  amount: number
+  winAmount: number
+  loseAmount: number
+}

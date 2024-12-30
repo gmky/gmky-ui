@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { eachDayOfInterval, eachWeekOfInterval, eachMonthOfInterval, format } from 'date-fns'
 import { VisXYContainer, VisLine, VisAxis, VisArea, VisCrosshair, VisTooltip } from '@unovis/vue'
-import type { Period, Range } from '~/types'
+import type { InvestmentChart, Period, Range } from '~/types'
+import type { PropType } from 'vue'
 
 const cardRef = ref<HTMLElement | null>(null)
 
@@ -12,6 +13,10 @@ const props = defineProps({
   },
   range: {
     type: Object as PropType<Range>,
+    required: true
+  },
+  cData: {
+    type: Object as PropType<InvestmentChart[]>,
     required: true
   }
 })
@@ -34,7 +39,7 @@ const { data } = await useAsyncData<DataRecord[]>(async () => {
   const min = 1000
   const max = 10000
 
-  return dates.map(date => ({ date, amount: Math.floor(Math.random() * (max - min + 1)) + min }))
+  return dates.map(date => ({ date, amount: props.cData.find(item => format(date, 'yyyy-MM-dd') == item.date)?.amount || 0 }))
 }, {
   watch: [() => props.period, () => props.range],
   default: () => []
@@ -45,7 +50,7 @@ const y = (d: DataRecord) => d.amount
 
 const total = computed(() => data.value.reduce((acc: number, { amount }) => acc + amount, 0))
 
-const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format
+const formatNumber = new Intl.NumberFormat('en', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format
 
 const formatDate = (date: Date): string => {
   return ({
@@ -67,10 +72,7 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
 </script>
 
 <template>
-  <UDashboardCard
-    ref="cardRef"
-    :ui="{ body: { padding: '!pb-3 !px-0' } as any }"
-  >
+  <UDashboardCard ref="cardRef" :ui="{ body: { padding: '!pb-3 !px-0' } as any }">
     <template #header>
       <div>
         <p class="text-sm text-gray-500 dark:text-gray-400 font-medium mb-1">
@@ -82,34 +84,13 @@ const template = (d: DataRecord) => `${formatDate(d.date)}: ${formatNumber(d.amo
       </div>
     </template>
 
-    <VisXYContainer
-      :data="data"
-      :padding="{ top: 10 }"
-      class="h-96"
-      :width="width"
-    >
-      <VisLine
-        :x="x"
-        :y="y"
-        color="rgb(var(--color-primary-DEFAULT))"
-      />
-      <VisArea
-        :x="x"
-        :y="y"
-        color="rgb(var(--color-primary-DEFAULT))"
-        :opacity="0.1"
-      />
+    <VisXYContainer :data="data" :padding="{ top: 10 }" class="h-96" :width="width">
+      <VisLine :x="x" :y="y" color="rgb(var(--color-primary-DEFAULT))" />
+      <VisArea :x="x" :y="y" color="rgb(var(--color-primary-DEFAULT))" :opacity="0.1" />
 
-      <VisAxis
-        type="x"
-        :x="x"
-        :tick-format="xTicks"
-      />
+      <VisAxis type="x" :x="x" :tick-format="xTicks" />
 
-      <VisCrosshair
-        color="rgb(var(--color-primary-DEFAULT))"
-        :template="template"
-      />
+      <VisCrosshair color="rgb(var(--color-primary-DEFAULT))" :template="template" />
 
       <VisTooltip />
     </VisXYContainer>
