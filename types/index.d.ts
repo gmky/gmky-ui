@@ -178,3 +178,14 @@ export interface BetHistory {
   amountWin: number
   amountLose: number
 }
+
+export interface LeaderStat {
+  dailyWinAmount: number
+  dailyLoseAmount: number
+  dailyWinCount: number
+  dailyLoseCount: number
+  weeklyWinAmount: number
+  weeklyLoseAmount: number
+  weeklyWinCount: number
+  weeklyLoseCount: number
+}

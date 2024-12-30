@@ -23,13 +23,13 @@ const props = defineProps({
 
     <UAlert class="h-full" :title="$t('investment_table_strategy_capital')">
       <template #description>
-        {{ info.strategyCapital.botMethod }}
+        {{ info.strategyCapital?.botMethod }}
       </template>
     </UAlert>
 
     <UAlert class="h-full" :title="$t('investment_table_strategy_signal')">
       <template #description>
-        {{ info.strategySignal.botMethod }}
+        {{ info.strategySignal?.botMethod || 'N/A' }}
       </template>
     </UAlert>
 
@@ -55,7 +55,7 @@ const props = defineProps({
 
     <UAlert class="h-full" :title="$t('investment_new_rule_capital_title')">
       <template #description>
-        <UBadge size="xs" :label="info.ruleCapital" :color="info.ruleCapital == 'WIN' ? 'green' : 'red'"
+        <UBadge size="xs" :label="info.ruleCapital || 'N/A'" :color="info.ruleCapital == 'WIN' ? 'green' : 'red'"
           variant="subtle" class="capitalize" />
       </template>
     </UAlert>

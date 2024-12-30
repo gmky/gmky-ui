@@ -57,10 +57,10 @@ function sendInfo() {
       <UDashboardNavbar :title="$t('professional_title')">
       </UDashboardNavbar>
       <UDashboardPanelContent>
-        <div class="grid lg:grid-cols-2 lg:items-start gap-8 mt-8">
-          <ProBet :round="round" :account-id="accountId" :linkage="linkage" :session-id="sessionId"
-            :linkage-id="linkageId" :count-down="countDown" />
-          <ProInfo />
+        <div class="grid lg:grid-cols-2 lg:items-start gap-8">
+          <ProBet :round="round" :account-id="accountId" :linkage="linkage" :session-id="`${sessionId}`"
+            :linkage-id="Number(linkageId)" :count-down="`${countDown}`" />
+          <ProInfo :linkage-id="linkageId" />
         </div>
       </UDashboardPanelContent>
     </UDashboardPanel>

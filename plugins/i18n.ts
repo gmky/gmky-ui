@@ -270,6 +270,11 @@ export default defineNuxtPlugin(({ vueApp }) => {
         professional_bet_rate: 'Hệ số nhân',
         professional_bet_rate_other: 'Khác',
         professional_count_down: 'Thời gian giao dịch',
+        professional_toggle: 'Chế độ chuyên gia',
+        professional_info_rate_today: 'Thắng/thua hôm nay',
+        professional_info_rate_7day: 'Thắng/thua 7 ngày',
+        professional_info_profit_today: 'Lợi nhuận hôm nay',
+        professional_info_profit_7day: 'Lợi nhuận 7 ngày'
       }
     }
   })
