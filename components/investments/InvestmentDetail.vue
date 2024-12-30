@@ -134,11 +134,11 @@ const totalItems = computed(() => response.value.meta.total || 0)
       </template>
 
       <template #createdAt-data="{ row }">
-        {{ format(new Date(row.createdAt), 'HH:mm:ss dd/MM/yyyy') }}
+        {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
       </template>
 
       <template #updatedAt-data="{ row }">
-        {{ format(new Date(row.updatedAt), 'HH:mm:ss dd/MM/yyyy') }}
+        {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
       </template>
     </UTable>
     <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
