@@ -39,5 +39,8 @@ export default {
   },
   getChart(investmentId) {
     return useFetch<InvestmentChart[]>(`/api/client-api/v1/investments/${investmentId}/chart`, { server: false })
+  },
+  checkLeader(username) {
+    return useFetch<any>(`/api/client-api/v1/leader/check`, { query: { username }, server: false })
   }
 }

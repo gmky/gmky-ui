@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { FormError } from '#ui/types'
 import { useI18n } from 'vue-i18n';
 import authService from '~/services/auth.service';
 
@@ -44,7 +45,8 @@ const fields = [{
 }]
 
 const validate = (state: any) => {
-  const errors = []
+  const errors: FormError[] = []
+  if (!state.username) errors.push({ path: 'username', message: 'Username is required' })
   if (!state.email) errors.push({ path: 'email', message: 'Email is required' })
   if (!state.password) errors.push({ path: 'password', message: 'Password is required' })
   return errors
@@ -61,23 +63,29 @@ const errorCode = ref(null)
 const mst = computed(() => {
   if (errorCode.value == 'G-0016') return t('error_username_existed')
   if (errorCode.value == 'G-0017') return t('error_email_existed')
+  if (errorCode.value == 'G-0018') return t('error_email_existed')
   return t('register_result_error')
 })
 
 async function onSubmit(data: any) {
-  failedToRegister.value = false
-  loading.value = true
-  const { error } = await authService.register(data);
-  if (error.value) {
+  try {
+    failedToRegister.value = false
+    loading.value = true
+    const { error: registerError } = await authService.register({ ...data });
+    if (registerError.value) {
+      failedToRegister.value = true
+      var errorBody = registerError.value.data
+      errorCode.value = errorBody.code
+    } else {
+      toast.add({
+        color: 'green',
+        title: t('register_success_msg')
+      })
+      router.push('/admin/login')
+    }
+  } catch (ex) {
+    loading.value = false
     failedToRegister.value = true
-    var errorBody = error.value.data
-    errorCode.value = errorBody.code
-  } else {
-    toast.add({
-      color: 'green',
-      title: t('register_success_msg')
-    })
-    router.push('/admin/login')
   }
   loading.value = false
 }
@@ -89,8 +97,8 @@ async function onSubmit(data: any) {
   <ClientOnly>
     <UContainer class="flex items-center justify-center h-screen">
       <UCard class="max-w-sm w-full bg-white/75 dark:bg-white/5 backdrop-blur">
-        <UAuthForm :fields="fields" :validate="validate" :title="$t('register_form_title')" :loading="loading"
-          :ui="{ base: 'text-center', footer: 'text-center' }"
+        <UAuthForm :fields="fields" :validate="validate" :validate-on="['submit']" :title="$t('register_form_title')"
+          :loading="loading" :ui="{ base: 'text-center', footer: 'text-center' }"
           :submit-button="{ label: $t('register_form_submit_btn') }" @submit="onSubmit">
           <template #description>
             {{ $t('register_form_msg') }} <NuxtLink to="/admin/login" class="text-primary font-medium">{{

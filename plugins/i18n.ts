@@ -277,9 +277,11 @@ export default defineNuxtPlugin(({ vueApp }) => {
         professional_info_profit_7day: 'Lợi nhuận 7 ngày',
         professional_mode_title: 'Chuyên gia',
         investment_new_copy_amount_title: 'Số tiền đặt lệnh',
+        investment_new_form_leader_existed_check_msg: 'Không tìm thấy ID trên hệ thống',
 
         error_username_existed: 'Tên đăng nhập đã tồn tại',
-        error_email_existed: 'Địa chỉ email đã tồn tại',
+        error_email_existed: 'Địa chỉ email đã tồn tại'
+
       }
     }
   })

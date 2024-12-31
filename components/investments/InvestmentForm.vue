@@ -31,9 +31,13 @@ const state = reactive({
 const selectedStrategyCapital = computed(() => capitalOpts.find(item => item.id == state.strategyCapitalId))
 const isCopy = computed(() => selectedStrategyCapital.value?.botCode == 'COPY')
 
-const validate = (state: any) => {
+const validate = async (state: any) => {
   const errors: FormError[] = []
   if (isCopy && !state.leader) errors.push({ path: 'leader', message: t('investment_new_form_leader_validation') })
+  if (isCopy && state.leader) {
+    const { error: tmp } = await investmentService.checkLeader(state.leader);
+    if (tmp.value) errors.push({ path: 'leader', message: t('investment_new_form_leader_existed_check_msg') })
+  }
   return errors
 }
 
@@ -63,7 +67,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
 </script>
 
 <template>
-  <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
+  <UForm :validate="validate" :validate-on="['submit']" :state="state" class="space-y-4" @submit="onSubmit">
     <UFormGroup :label="$t('investment_new_name_title')" name="bot-name">
       <UInput v-model="state.botName" type="text" :placeholder="$t('investment_new_name_ph')" autofocus />
     </UFormGroup>
@@ -111,7 +115,7 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       <UInput v-model="state.copyAmount" :placeholder="$t('investment_new_copy_amount_title')" />
     </UFormGroup>
 
-    <UFormGroup :label="$t('investment_new_balance_title')" name="balance">
+    <UFormGroup :label="$t('investment_new_balance_title')" v-if="!isCopy" name="balance">
       <UInput v-model="state.balance" type="number" :placeholder="$t('investment_new_balance_ph')" />
     </UFormGroup>
 

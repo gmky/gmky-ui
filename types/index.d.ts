@@ -145,6 +145,7 @@ export interface Investment {
   strategyCapitalId: number
   accountType: string
   leader: string
+  copyAmount: number
 }
 
 export interface BotStrategy {
