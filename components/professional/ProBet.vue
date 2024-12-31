@@ -11,7 +11,7 @@ const props = defineProps({
   linkage: Object,
 })
 
-const emit = defineEmits(['reloadHistory'])
+const emit = defineEmits(['reloadHistory', 'reloadAll'])
 
 const amount = ref(5)
 
@@ -67,7 +67,7 @@ async function betIt(betType) {
 }
 
 watch(() => props.round, (newVal, oldVal) => {
-  if (oldVal == 'WAITING') emit('reloadHistory')
+  if (oldVal == 'WAITING') emit('reloadAll')
 })
 
 </script>

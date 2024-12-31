@@ -41,7 +41,7 @@ const { data } = await useAsyncData<DataRecord[]>(async () => {
 
   return dates.map(date => ({ date, amount: props.cData.find(item => format(date, 'yyyy-MM-dd') == item.date)?.amount || 0 }))
 }, {
-  watch: [() => props.period, () => props.range],
+  watch: [() => props.period, () => props.range, () => props.cData],
   default: () => []
 })
 

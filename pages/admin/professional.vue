@@ -122,10 +122,20 @@ async function reloadHistory() {
   const { data: tmp, status: tmpStatus } = await leaderService.getLeaderHistory(query);
   response.value = tmp.value
   status.value = tmpStatus.value
+}
+
+async function reloadAll() {
+  await reloadHistory();
   await reloadStat()
+  await reloadChart()
 }
 
 const { data: cData } = await leaderService.getChart(linkageId.value);
+async function reloadChart() {
+  console.log('reload')
+  const { data: tmp1 } = await leaderService.getChart(linkageId.value);
+  cData.value = tmp1.value
+}
 
 const histories = computed(() => response.value.data || [])
 const loading = computed(() => status.value == 'pending')
@@ -152,7 +162,8 @@ async function reloadStat() {
       <UDashboardPanelContent>
         <div class="grid lg:grid-cols-2 lg:items-start gap-4 mb-4">
           <ProBet :round="round" :account-id="accountId" :linkage="linkage" :session-id="`${sessionId}`"
-            :linkage-id="Number(linkageId)" :count-down="`${countDown}`" @reload-history="reloadHistory" />
+            :linkage-id="Number(linkageId)" :count-down="`${countDown}`" @reload-history="reloadHistory"
+            @reload-all="reloadAll" />
           <ProInfo :linkage-id="Number(linkageId)" :info="info" />
         </div>
         <HomeChart :period="period" :range="range" :c-data="cData" class="mb-4" />
