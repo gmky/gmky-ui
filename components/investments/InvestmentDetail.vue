@@ -111,38 +111,41 @@ const totalItems = computed(() => response.value.meta.total || 0)
       <InvestmentsInvestmentDetailInfo :info="info" />
     </UDashboardCard>
     <HomeChart :period="period" :range="range" :c-data="cData" />
-    <UTable v-model:sort="sort" :rows="histories" :columns="columns" sort-mode="manual" class="w-full"
-      :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
+    <div class="mb-4"></div>
+    <UCard>
+      <UTable v-model:sort="sort" :rows="histories" :columns="columns" sort-mode="manual" class="w-full"
+        :ui="{ divide: 'divide-gray-200 dark:divide-gray-800' }">
 
-      <template #action-data="{ row }">
-        <UBadge :label="row.action" :color="getColorFromAction(row.action)" variant="subtle" class="capitalize" />
-      </template>
+        <template #action-data="{ row }">
+          <UBadge :label="row.action" :color="getColorFromAction(row.action)" variant="subtle" class="capitalize" />
+        </template>
 
-      <template #status-data="{ row }">
-        <UBadge :label="row.status || 'PENDING'" :color="getColorFromStatus(row.status)" variant="subtle"
-          class="capitalize" />
-      </template>
+        <template #status-data="{ row }">
+          <UBadge :label="row.status || 'PENDING'" :color="getColorFromStatus(row.status)" variant="subtle"
+            class="capitalize" />
+        </template>
 
-      <template #amountWin-data="{ row }">
-        <span class="text-green-500" variant="subtle">{{ row.amountWin ? `+ ${row.amountWin}` : ''
-          }}</span>
-      </template>
+        <template #amountWin-data="{ row }">
+          <span class="text-green-500" variant="subtle">{{ row.amountWin ? `+ ${row.amountWin}` : ''
+            }}</span>
+        </template>
 
-      <template #amountLose-data="{ row }">
-        <span class="text-red-500" variant="subtle">{{ row.amountLose ? `- ${row.amountLose}` : ''
-          }}</span>
-      </template>
+        <template #amountLose-data="{ row }">
+          <span class="text-red-500" variant="subtle">{{ row.amountLose ? `- ${row.amountLose}` : ''
+            }}</span>
+        </template>
 
-      <template #createdAt-data="{ row }">
-        {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
-      </template>
+        <template #createdAt-data="{ row }">
+          {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
+        </template>
 
-      <template #updatedAt-data="{ row }">
-        {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
-      </template>
-    </UTable>
-    <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-      <UPagination v-model="currentPage" :page-count="pageSize" :total="totalItems" />
-    </div>
+        <template #updatedAt-data="{ row }">
+          {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
+        </template>
+      </UTable>
+      <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+        <UPagination v-model="currentPage" :page-count="pageSize" :total="totalItems" />
+      </div>
+    </UCard>
   </div>
 </template>

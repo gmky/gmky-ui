@@ -2,27 +2,29 @@
 const links = [[{
   label: 'General',
   icon: 'i-heroicons-user-circle',
-  to: '/settings',
+  to: '/admin/settings',
   exact: true
 }, {
   label: 'Members',
   icon: 'i-heroicons-user-group',
-  to: '/settings/members'
+  to: '/admin/settings/members'
 }, {
   label: 'Notifications',
   icon: 'i-heroicons-bell',
-  to: '/settings/notifications'
-}], [{
-  label: 'Documentation',
-  icon: 'i-heroicons-book-open',
-  to: 'https://ui.nuxt.com/pro',
-  target: '_blank'
-}, {
-  label: 'Buy now',
-  icon: 'i-heroicons-credit-card',
-  to: 'https://ui.nuxt.com/pro/purchase',
-  target: '_blank'
-}]]
+  to: '/admin/settings/notifications'
+}],
+  // [{
+  //   label: 'Documentation',
+  //   icon: 'i-heroicons-book-open',
+  //   to: 'https://ui.nuxt.com/pro',
+  //   target: '_blank'
+  // }, {
+  //   label: 'Buy now',
+  //   icon: 'i-heroicons-credit-card',
+  //   to: 'https://ui.nuxt.com/pro/purchase',
+  //   target: '_blank'
+  // }]
+]
 </script>
 
 <template>

@@ -142,50 +142,52 @@ const totalItems = computed(() => response.value.meta.total || 0)
       <UDashboardNavbar :title="$t('professional_title')">
       </UDashboardNavbar>
       <UDashboardPanelContent>
-        <div class="grid lg:grid-cols-2 lg:items-start gap-8 mb-4">
+        <div class="grid lg:grid-cols-2 lg:items-start gap-4 mb-4">
           <ProBet :round="round" :account-id="accountId" :linkage="linkage" :session-id="`${sessionId}`"
             :linkage-id="Number(linkageId)" :count-down="`${countDown}`" @reload-history="reloadHistory" />
           <ProInfo :linkage-id="Number(linkageId)" />
         </div>
         <HomeChart :period="period" :range="range" :c-data="cData" class="mb-4" />
-        <UTable v-model:sort="sort" :rows="histories" :columns="columns" :loading="loading" sort-mode="manual"
-          class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800 mt-2' }">
+        <UCard>
+          <UTable v-model:sort="sort" :rows="histories" :columns="columns" :loading="loading" sort-mode="manual"
+            class="w-full" :ui="{ divide: 'divide-gray-200 dark:divide-gray-800 mt-2' }">
 
-          <template #action-data="{ row }">
-            <UBadge :label="row.action" :color="getColorFromAction(row.action)" variant="subtle" class="capitalize" />
-          </template>
+            <template #action-data="{ row }">
+              <UBadge :label="row.action" :color="getColorFromAction(row.action)" variant="subtle" class="capitalize" />
+            </template>
 
-          <template #professional-data="{ row }">
-            <UBadge :label="row.professional ? 'YES' : 'NO'" :color="row.professional ? 'green' : 'gray'"
-              variant="subtle" class="capitalize" />
-          </template>
+            <template #professional-data="{ row }">
+              <UBadge :label="row.professional ? 'YES' : 'NO'" :color="row.professional ? 'green' : 'gray'"
+                variant="subtle" class="capitalize" />
+            </template>
 
-          <template #status-data="{ row }">
-            <UBadge :label="row.status || 'PENDING'" :color="getColorFromStatus(row.status)" variant="subtle"
-              class="capitalize" />
-          </template>
+            <template #status-data="{ row }">
+              <UBadge :label="row.status || 'PENDING'" :color="getColorFromStatus(row.status)" variant="subtle"
+                class="capitalize" />
+            </template>
 
-          <template #amountWin-data="{ row }">
-            <span class="text-green-500" variant="subtle">{{ row.amountWin ? `+ ${row.amountWin}` : ''
-              }}</span>
-          </template>
+            <template #amountWin-data="{ row }">
+              <span class="text-green-500" variant="subtle">{{ row.amountWin ? `+ ${row.amountWin}` : ''
+                }}</span>
+            </template>
 
-          <template #amountLose-data="{ row }">
-            <span class="text-red-500" variant="subtle">{{ row.amountLose ? `- ${row.amountLose}` : ''
-              }}</span>
-          </template>
+            <template #amountLose-data="{ row }">
+              <span class="text-red-500" variant="subtle">{{ row.amountLose ? `- ${row.amountLose}` : ''
+                }}</span>
+            </template>
 
-          <template #createdAt-data="{ row }">
-            {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
-          </template>
+            <template #createdAt-data="{ row }">
+              {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
+            </template>
 
-          <template #updatedAt-data="{ row }">
-            {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
-          </template>
-        </UTable>
-        <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
-          <UPagination v-model="currentPage" :page-count="pageSize" :total="totalItems" />
-        </div>
+            <template #updatedAt-data="{ row }">
+              {{ format(row.createdAt, 'HH:mm:ss dd/MM/yyyy') }}
+            </template>
+          </UTable>
+          <div class="flex justify-end px-3 py-3.5 border-t border-gray-200 dark:border-gray-700">
+            <UPagination v-model="currentPage" :page-count="pageSize" :total="totalItems" />
+          </div>
+        </UCard>
       </UDashboardPanelContent>
     </UDashboardPanel>
   </UDashboardPage>

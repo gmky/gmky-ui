@@ -276,6 +276,10 @@ export default defineNuxtPlugin(({ vueApp }) => {
         professional_info_profit_today: 'Lợi nhuận hôm nay',
         professional_info_profit_7day: 'Lợi nhuận 7 ngày',
         professional_mode_title: 'Chuyên gia',
+        investment_new_copy_amount_title: 'Số tiền đặt lệnh',
+
+        error_username_existed: 'Tên đăng nhập đã tồn tại',
+        error_email_existed: 'Địa chỉ email đã tồn tại',
       }
     }
   })

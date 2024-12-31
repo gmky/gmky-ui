@@ -56,12 +56,22 @@ const toast = useToast()
 const failedToRegister = ref(false)
 const loading = ref(false)
 
+const errorCode = ref(null)
+
+const mst = computed(() => {
+  if (errorCode.value == 'G-0016') return t('error_username_existed')
+  if (errorCode.value == 'G-0017') return t('error_email_existed')
+  return t('register_result_error')
+})
+
 async function onSubmit(data: any) {
   failedToRegister.value = false
   loading.value = true
   const { error } = await authService.register(data);
   if (error.value) {
     failedToRegister.value = true
+    var errorBody = error.value.data
+    errorCode.value = errorBody.code
   } else {
     toast.add({
       color: 'green',
@@ -88,8 +98,7 @@ async function onSubmit(data: any) {
           </template>
 
           <template #validation>
-            <UAlert v-if="failedToRegister" color="red" icon="i-heroicons-information-circle-20-solid"
-              :title="$t('register_result_error')" />
+            <UAlert v-if="failedToRegister" color="red" icon="i-heroicons-information-circle-20-solid" :title="mst" />
           </template>
 
           <template #footer>

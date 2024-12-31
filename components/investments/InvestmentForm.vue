@@ -24,7 +24,8 @@ const state = reactive({
   maxWin: 0,
   maxLose: 0,
   linkageId: linkageId.value,
-  leader: undefined
+  leader: undefined,
+  copyAmount: 0
 })
 
 const selectedStrategyCapital = computed(() => capitalOpts.find(item => item.id == state.strategyCapitalId))
@@ -104,6 +105,10 @@ async function onSubmit(event: FormSubmitEvent<any>) {
       <USelectMenu v-model="state.ruleCapital" :options="ruleCapitalOpts"
         :placeholder="$t('investment_new_rule_capital_ph')" class="space-y-2 space-x-4">
       </USelectMenu>
+    </UFormGroup>
+
+    <UFormGroup :label="$t('investment_new_copy_amount_title')" name="copy-amount" v-if="isCopy">
+      <UInput v-model="state.copyAmount" :placeholder="$t('investment_new_copy_amount_title')" />
     </UFormGroup>
 
     <UFormGroup :label="$t('investment_new_balance_title')" name="balance">
