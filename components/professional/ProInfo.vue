@@ -34,7 +34,7 @@ const props = defineProps({
 
         <UAlert class="h-full" :title="$t('professional_info_profit_7day')">
           <template #description>
-            <span class="font-bold">{{ info.dailyWinAmount }} / {{ info.dailyLoseAmount }}</span>
+            <span class="font-bold">{{ info.weeklyWinAmount }} / {{ info.weeklyLoseAmount }}</span>
           </template>
         </UAlert>
       </div>
