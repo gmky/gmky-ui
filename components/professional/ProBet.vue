@@ -53,7 +53,7 @@ const { t } = useI18n()
 async function betIt(betType) {
   const data = {
     amount: amount.value,
-    accountId: accountId,
+    accountId: accountId.value,
     sessionId: props.sessionId,
     action: betType,
     linkageId: props.linkageId,
@@ -77,11 +77,19 @@ watch(() => props.round, (newVal, oldVal) => {
     <template #header>
       <UForm :state="{}" class="space-y-4">
         <UFormGroup :label="$t('professional_bet_amount')" :ui="{ wrapper: 'w-full' }" class="w-full" name="bet-amount">
-          <UInput class="w-full" placeholder="Search..." v-model="amount">
-            <template #trailing>
-              <span class="text-gray-500 dark:text-gray-400 text-xs">USDT</span>
-            </template>
-          </UInput>
+          <div class="flex items-center gap-x-2 left justify-left">
+            <UInput class="w-2/3" placeholder="Search..." v-model="amount">
+              <template #trailing>
+                <span class="text-gray-500 dark:text-gray-400 text-xs">USDT</span>
+              </template>
+            </UInput>
+            <USelectMenu v-model="accountId" :options="accountOpts" :placeholder="$t('investment_new_account_type_ph')"
+              class="w-1/3 space-y-2 space-x-4" option-attribute="type" value-attribute="value">
+              <template #option="{ option: account }">
+                <span class="truncate">{{ account.type }} ({{ account.value }})</span>
+              </template>
+            </USelectMenu>
+          </div>
         </UFormGroup>
         <UFormGroup :label="$t('professional_bet_rate')" class="w-full" name="bet-rate">
           <div class="flex items-center gap-x-2 left">
@@ -89,14 +97,15 @@ watch(() => props.round, (newVal, oldVal) => {
               :color="item === betRate ? 'primary' : 'gray'" variant="solid" :disabled="!professionalMode" />
             <UButton :label="$t('professional_bet_rate_other')" color="gray" variant="solid"
               @click="isOtherBetRate = !isOtherBetRate" :disabled="!professionalMode" />
-            <UInput v-model="betRate" v-if="isOtherBetRate" :placeholder="$t('investment_new_leader_ph')"
+            <UInput v-model="betRate" v-if="isOtherBetRate" :placeholder="$t('professional_bet_rate')"
               :disabled="!professionalMode" />
           </div>
         </UFormGroup>
         <UFormGroup class="w-full" name="bet-amount">
           <UInput class="w-full" :disabled="true">
             <template #leading>
-              <span class="text-gray-500 dark:text-gray-400 text-xs w-full">{{ $t('professional_count_down') }}</span>
+              <span class="text-gray-500 dark:text-gray-400 text-xs w-full">{{ props.round == 'WAITING' ?
+                $t('professional_count_down_wait') : $t('professional_count_down_bet') }}</span>
             </template>
             <template #trailing>
               <span class="text-gray-500 dark:text-gray-400 text-xs w-full">{{ countDown }}</span>
@@ -106,11 +115,11 @@ watch(() => props.round, (newVal, oldVal) => {
         <UFormGroup>
           <div class="flex items-center gap-x-2 left justify-left">
             <UButton class="w-1/2 text-center" :label="$t('professional_down_btn')"
-              trailing-icon="i-heroicons-arrow-trending-down" color="red" size="lg" :disabled="round == 'WAITING'"
-              @click="betIt('SELL')" />
+              trailing-icon="i-heroicons-arrow-trending-down" :color="round == 'WAITING' ? 'gray' : 'red'" size="lg"
+              :disabled="round == 'WAITING'" @click="betIt('SELL')" />
             <UButton class="w-1/2 text-center" :label="$t('professional_up_btn')" size="lg"
-              trailing-icon="i-heroicons-arrow-trending-up" color="green" :disabled="round == 'WAITING'"
-              @click="betIt('BUY')" />
+              trailing-icon="i-heroicons-arrow-trending-up" :color="round == 'WAITING' ? 'gray' : 'green'"
+              :disabled="round == 'WAITING'" @click="betIt('BUY')" />
           </div>
         </UFormGroup>
         <UFormGroup :label="$t('professional_toggle')">
