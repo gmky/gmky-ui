@@ -122,6 +122,7 @@ async function reloadHistory() {
   const { data: tmp, status: tmpStatus } = await leaderService.getLeaderHistory(query);
   response.value = tmp.value
   status.value = tmpStatus.value
+  await reloadStat()
 }
 
 const { data: cData } = await leaderService.getChart(linkageId.value);
@@ -135,6 +136,13 @@ const sort = ref({ column: 'id', direction: 'asc' as const })
 const columns = computed(() => defaultColumns.filter(column => selectedColumns.value.includes(column)))
 const totalItems = computed(() => response.value.meta.total || 0)
 
+const { data: info } = await leaderService.getLeaderStat({ linkageId })
+
+async function reloadStat() {
+  const { data: tmp } = await leaderService.getLeaderStat({ linkageId })
+  info.value = tmp.value
+}
+
 </script>
 <template>
   <UDashboardPage>
@@ -145,7 +153,7 @@ const totalItems = computed(() => response.value.meta.total || 0)
         <div class="grid lg:grid-cols-2 lg:items-start gap-4 mb-4">
           <ProBet :round="round" :account-id="accountId" :linkage="linkage" :session-id="`${sessionId}`"
             :linkage-id="Number(linkageId)" :count-down="`${countDown}`" @reload-history="reloadHistory" />
-          <ProInfo :linkage-id="Number(linkageId)" />
+          <ProInfo :linkage-id="Number(linkageId)" :info="info" />
         </div>
         <HomeChart :period="period" :range="range" :c-data="cData" class="mb-4" />
         <UCard>

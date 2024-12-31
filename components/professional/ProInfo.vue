@@ -2,10 +2,12 @@
 import leaderService from '~/services/leader.service';
 
 const props = defineProps({
-  linkageId: Number
+  linkageId: Number,
+  info: {
+    type: Object
+  }
 })
 
-const { data: info } = await leaderService.getLeaderStat({ linkageId: props.linkageId })
 </script>
 
 <template>
