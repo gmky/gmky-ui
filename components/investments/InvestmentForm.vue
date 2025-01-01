@@ -33,8 +33,8 @@ const isCopy = computed(() => selectedStrategyCapital.value?.botCode == 'COPY')
 
 const validate = async (state: any) => {
   const errors: FormError[] = []
-  if (isCopy && !state.leader) errors.push({ path: 'leader', message: t('investment_new_form_leader_validation') })
-  if (isCopy && state.leader) {
+  if (isCopy.value && !state.leader) errors.push({ path: 'leader', message: t('investment_new_form_leader_validation') })
+  if (isCopy.value && state.leader) {
     const { error: tmp } = await investmentService.checkLeader(state.leader);
     if (tmp.value) errors.push({ path: 'leader', message: t('investment_new_form_leader_existed_check_msg') })
   }
