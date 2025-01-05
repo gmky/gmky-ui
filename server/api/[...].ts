@@ -6,10 +6,11 @@ export default defineEventHandler(async (event) => {
     const token = cookies['auth.token']
 
     const runtimeConfig = useRuntimeConfig()
-    const baseURL = runtimeConfig.baseURL
-
+    const apiBaseURL = runtimeConfig.public.apiBaseUrl
     const path = event.path.replace(/^\/api\//, '')
-    const target = joinURL(baseURL, path)
+    const target = joinURL(apiBaseURL, path)
+
+    console.log(apiBaseURL)
 
     if (!token) return proxyRequest(event, target);
 

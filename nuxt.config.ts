@@ -14,10 +14,6 @@ export default defineNuxtConfig({
 
   ssr: false,
 
-  nitro: {
-    preset: 'cloudflare-pages'
-  },
-
   ui: {
     icons: ['heroicons', 'simple-icons'],
     safelistColors: ['primary', 'red', 'orange', 'green'],
@@ -42,7 +38,7 @@ export default defineNuxtConfig({
 
   auth: {
     isEnabled: true,
-    baseURL: 'http://localhost:3000/api',
+    baseURL: `/api`,
     provider: {
       type: 'local',
       endpoints: {
@@ -67,7 +63,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    baseURL: process.env.NUXT_BASE_URL || 'http://localhost:8080',
+    public: {
+      apiBaseUrl: 'http://localhost:8080'
+    }
   },
 
   compatibilityDate: '2024-09-19',
